@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Animations complexes du Hero (CSS Module)
+   ========================================================================== */
+
+/* --- Soulignement animé du mot "convertissent" --------------------------- */
+.underline {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.04em;
+  height: 0.055em;
+  width: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #0066ff 0%, #3385ff 60%, #0066ff 100%);
+  box-shadow: 0 0 22px rgba(0, 102, 255, 0.75);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Classe appliquée une fois l'écran de chargement terminé */
+.underlineActive::after {
+  animation: draw 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Indicateur de scroll : segment bleu qui descend en boucle ----------- */
+.scrollTrack {
+  position: relative;
+  width: 1px;
+  height: 68px;
+  overflow: hidden;
+  background: #1f1f1f;
+}
+
+.scrollThumb {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 45%;
+  background: linear-gradient(to bottom, transparent, #0066ff, transparent);
+  animation: travel 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes travel {
+  0% {
+    transform: translateY(-110%);
+  }
+  100% {
+    transform: translateY(230%);
+  }
+}
+
+/* --- Voile de lumière qui respire derrière le titre ---------------------- */
+.aura {
+  position: absolute;
+  inset: -10% auto auto -18%;
+  width: 46rem;
+  height: 46rem;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    rgba(0, 102, 255, 0.16),
+    transparent 72%
+  );
+  filter: blur(18px);
+  animation: breathe 11s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .underline::after {
+    transform: scaleX(1);
+    animation: none;
+  }
+  .scrollThumb,
+  .aura {
+    animation: none;
+  }
+}

@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   DSM DIGITAL — Design System
+   Tailwind CSS v4 : la configuration se fait directement en CSS via @theme.
+   ========================================================================== */
+
+@theme {
+  /* --- Palette stricte -------------------------------------------------- */
+  --color-void: #0a0a0a; /* fond principal */
+  --color-surface: #111111; /* fond secondaire */
+  --color-surface-2: #151515; /* cards au hover */
+  --color-line: #1f1f1f; /* bordures subtiles */
+  --color-line-strong: #2a2a2a;
+  --color-accent: #0066ff; /* bleu signature */
+  --color-accent-soft: #3385ff; /* bleu hover */
+  --color-bone: #fafafa; /* texte principal */
+  --color-ash: #a1a1a1; /* texte secondaire */
+  --color-ash-dim: #6b6b6b;
+
+  /* --- Typographies (next/font injecte les variables) ------------------- */
+  --font-display: var(--font-clash), "Clash Display", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-sans: var(--font-satoshi), "Satoshi", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+
+  /* --- Animations custom ------------------------------------------------ */
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-marquee-slow: marquee 68s linear infinite;
+  --animate-pulse-line: pulse-line 2.4s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 22s linear infinite;
+
+  /* --- Easings ---------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes pulse-line {
+  0%,
+  100% {
+    transform: scaleY(0.15);
+    opacity: 0.25;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: auto; /* Lenis gère le smooth scroll */
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-accent) 85%, black);
+  color: #fff;
+}
+
+/* Barre de défilement discrète (desktop) */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #242424;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
+}
+
+/* Masque le curseur système quand notre curseur custom est actif */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* ==========================================================================
+   Utilitaires maison
+   ========================================================================== */
+
+/* Conteneur global : marges généreuses */
+.shell {
+  width: 100%;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .shell {
+    padding-inline: 2.5rem;
+  }
+}
+@media (min-width: 1280px) {
+  .shell {
+    padding-inline: 4rem;
+  }
+}
+
+/* Texture de grain cinématographique (SVG inline, zéro requête réseau) */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  /* Opacité volontairement faible : le grain doit se deviner, pas se voir */
+  opacity: 0.075;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Lien d'évitement (accessibilité clavier) */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 300;
+  transform: translateY(-160%);
+  border-radius: 999px;
+  background: var(--color-accent);
+  padding: 0.6rem 1.2rem;
+  font-size: 0.8rem;
+  color: #fff;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+}
+
+/* Grille technique en arrière-plan */
+.grid-lines {
+  background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-line) 90%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-line) 90%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 76px 76px;
+}
+
+/* Dégradé radial bleu très subtil */
+.glow-blue {
+  background: radial-gradient(
+    60% 60% at 50% 50%,
+    color-mix(in srgb, var(--color-accent) 28%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+/* Masque de fondu haut/bas pour les grilles */
+.mask-fade-y {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 18%,
+    black 82%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 18%,
+    black 82%,
+    transparent
+  );
+}
+
+.mask-fade-x {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+/* Typographie display : interlignage serré + tracking négatif */
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+/* Filet lumineux horizontal */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-line-strong),
+    transparent
+  );
+}
+
+/* Accessibilité : on coupe tout si l'utilisateur le demande */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
