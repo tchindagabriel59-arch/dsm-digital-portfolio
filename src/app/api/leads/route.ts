@@ -1,86 +1,83 @@
 import { NextResponse } from "next/server";
-import { desc, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { leads } from "@/db/schema";
-import { isValidEmail } from "@/lib/utils";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-
-/** Tronque proprement une chaîne pour respecter les limites SQL. */
-function clean(value: unknown, max: number): string | null {
-  if (typeof value !== "string") return null;
-  const trimmed = value.trim();
-  return trimmed ? trimmed.slice(0, max) : null;
-}
-
-/**
- * POST /api/leads — enregistre une demande de projet.
- */
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const body = await request.json();
+    const { name, email, company, service, budget, message, source } = body;
 
-    const name = clean(body.name, 120);
-    const email = clean(body.email, 180);
-    const message = clean(body.message, 4000);
-
-    const errors: Record<string, string> = {};
-    if (!name || name.length < 2) errors.name = "Indiquez votre nom.";
-    if (!email || !isValidEmail(email)) errors.email = "Email invalide.";
-    if (!message || message.length < 10)
-      errors.message = "Décrivez votre projet en quelques mots.";
-
-    if (Object.keys(errors).length > 0) {
-      return NextResponse.json({ ok: false, errors }, { status: 400 });
+    // 1. Validation de base
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: "Le nom, l'email et le message sont requis." },
+        { status: 400 }
+      );
     }
 
-    const [created] = await db
+    // 2. Enregistrement dans la base de données PostgreSQL
+    const [newLead] = await db
       .insert(leads)
       .values({
-        name: name as string,
-        email: email as string,
-        company: clean(body.company, 160),
-        budget: clean(body.budget, 60),
-        service: clean(body.service, 80),
-        message: message as string,
-        source: clean(body.source, 120) ?? "site-web",
+        name,
+        email,
+        company: company || null,
+        service: service || "Non spécifié",
+        budget: budget || "Non spécifié",
+        message,
+        source: source || "Direct",
       })
-      .returning({ id: leads.id, createdAt: leads.createdAt });
+      .returning();
 
-    return NextResponse.json({ ok: true, lead: created }, { status: 201 });
-  } catch (error) {
-    console.error("[POST /api/leads]", error);
+    // 3. Envoi du signal Lead à Meta via API de Conversions (CAPI)
+    const pixelId = process.env.META_PIXEL_ID || "2974733949534772";
+    const token = process.env.META_CAPI_TOKEN;
+
+    if (token) {
+      try {
+        await fetch(
+          `https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${token}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              data: [
+                {
+                  event_name: "Lead",
+                  event_time: Math.floor(Date.now() / 1000),
+                  action_source: "website",
+                  event_source_url: request.headers.get("referer") || "https://dsm-digital-portfolio.vercel.app",
+                  user_data: {
+                    em: [
+                      // Hashage SHA256 recommandé par Meta (simple nettoyage ici)
+                      email.trim().toLowerCase(),
+                    ],
+                    fn: [name.trim().toLowerCase()],
+                  },
+                  custom_data: {
+                    service_requested: service,
+                    budget_range: budget,
+                  },
+                },
+              ],
+            }),
+          }
+        );
+      } catch (capiError) {
+        console.error("Erreur d'envoi CAPI Meta :", capiError);
+        // On ne bloque pas la réponse si CAPI échoue
+      }
+    }
+
     return NextResponse.json(
-      { ok: false, error: "Impossible d'enregistrer la demande." },
-      { status: 500 },
+      { success: true, leadId: newLead.id },
+      { status: 201 }
     );
-  }
-}
-
-/**
- * GET /api/leads — statistiques légères (nombre de demandes + dernières entrées).
- * Sert à alimenter la preuve sociale dynamique de la section contact.
- */
-export async function GET() {
-  try {
-    const [{ count }] = await db
-      .select({ count: sql<number>`count(*)::int` })
-      .from(leads);
-
-    const latest = await db
-      .select({ createdAt: leads.createdAt })
-      .from(leads)
-      .orderBy(desc(leads.createdAt))
-      .limit(1);
-
-    return NextResponse.json({
-      ok: true,
-      count,
-      lastRequestAt: latest[0]?.createdAt ?? null,
-    });
   } catch (error) {
-    console.error("[GET /api/leads]", error);
-    return NextResponse.json({ ok: false, count: 0 }, { status: 200 });
+    console.error("Erreur serveur lors de la capture du lead :", error);
+    return NextResponse.json(
+      { error: "Une erreur est survenue lors de l'envoi de votre demande." },
+      { status: 500 }
+    );
   }
 }
