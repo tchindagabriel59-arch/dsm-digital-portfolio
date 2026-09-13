@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { clashDisplay, satoshi } from "@/lib/fonts";
-import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import SmoothScroll from "@/components/providers/SmoothScroll";
 import { LoadingProvider } from "@/components/providers/LoadingProvider";
 import { ContactProvider } from "@/components/providers/ContactProvider";
 import { Preloader } from "@/components/ui/Preloader";
