@@ -1,142 +1,88 @@
-import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
-import { clashDisplay, satoshi } from "@/lib/fonts";
-import { SITE } from "@/lib/content";
-import SmoothScroll from "@/components/providers/SmoothScroll";
-import LoadingProvider from "@/components/providers/LoadingProvider";
-import ContactProvider from "@/components/providers/ContactProvider";
-import Cursor from "@/components/ui/Cursor";
-import ScrollProgress from "@/components/ui/ScrollProgress";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
-
-const TITLE =
-  "DSM Digital — Agence de création web, SEO et publicité digitale";
-const DESCRIPTION =
-  "DSM Digital conçoit des sites web performants et pilote vos campagnes Meta, TikTok et Google Ads. Boostez votre présence en ligne avec une agence orientée résultats.";
+import { clashDisplay, satoshi } from "@/lib/fonts";
+import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import { LoadingProvider } from "@/components/providers/LoadingProvider";
+import { ContactProvider } from "@/components/providers/ContactProvider";
+import { Preloader } from "@/components/ui/Preloader";
+import { Cursor } from "@/components/ui/Cursor";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
+import { ContactDialog } from "@/components/contact/ContactDialog";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
-  title: { default: TITLE, template: "%s — DSM Digital" },
-  description: DESCRIPTION,
-  applicationName: SITE.name,
-  authors: [{ name: SITE.name, url: SITE.url }],
-  creator: SITE.name,
-  publisher: SITE.name,
+  title: "DSM Digital — Agence de création web, SEO et publicité digitale",
+  description:
+    "DSM Digital conçoit des sites web performants et pilote vos campagnes Meta, TikTok et Google Ads. Boostez votre présence en ligne avec une agence orientée résultats.",
   keywords: [
     "agence digitale",
     "création site web",
-    "développement web",
-    "référencement SEO",
+    "SEO",
     "Meta Ads",
     "TikTok Ads",
     "Google Ads",
-    "social media management",
-    "agence web Dakar",
-    "acquisition payante",
-    "site web restaurant",
-    "site salle de sport",
-    "site salon de coiffure",
-    "site web supérette",
-    "e-commerce mode cosmétique",
-    "site internet entreprise",
+    "Sénégal",
+    "Dakar",
+    "Cameroun",
   ],
-  alternates: { canonical: "/" },
+  authors: [{ name: "DSM Digital" }],
   openGraph: {
-    type: "website",
+    title: "DSM Digital — Agence de création web & acquisition",
+    description: "Transformez votre présence en ligne en machine à résultats.",
+    url: "https://dsm-digital-portfolio.vercel.app",
+    siteName: "DSM Digital",
     locale: "fr_FR",
-    url: SITE.url,
-    siteName: SITE.name,
-    title: TITLE,
-    description: DESCRIPTION,
+    type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
-  },
-  category: "technology",
 };
 
-export const viewport: Viewport = {
-  themeColor: "#0A0A0A",
-  colorScheme: "dark",
-};
-
-/** Données structurées Schema.org (Organization + WebSite). */
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${SITE.url}#organization`,
-      name: SITE.name,
-      url: SITE.url,
-      email: SITE.email,
-      description: DESCRIPTION,
-      slogan: "Nous créons des expériences digitales qui convertissent.",
-      areaServed: "Worldwide",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Dakar",
-        addressCountry: "SN",
-      },
-      sameAs: [
-        "https://www.linkedin.com",
-        "https://www.instagram.com",
-        "https://www.tiktok.com",
-        "https://www.facebook.com",
-      ],
-      makesOffer: [
-        "Développement web",
-        "Référencement SEO",
-        "Publicité digitale",
-        "Social media management",
-      ].map((name) => ({
-        "@type": "Offer",
-        itemOffered: { "@type": "Service", name },
-      })),
-    },
-    {
-      "@type": "WebSite",
-      "@id": `${SITE.url}#website`,
-      url: SITE.url,
-      name: SITE.name,
-      inLanguage: "fr-FR",
-      publisher: { "@id": `${SITE.url}#organization` },
-    },
-  ],
-};
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="fr" className={`${clashDisplay.variable} ${satoshi.variable}`}>
-      <body className="grain bg-void text-bone antialiased">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+    <html
+      lang="fr"
+      className={`${clashDisplay.variable} ${satoshi.variable} dark antialiased`}
+    >
+      <head>
+        {/* PIXEL META (FACEBOOK ADS) */}
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '2974733949534772');
+              fbq('track', 'PageView');
+            `,
+          }}
         />
-
-        <a href="#contenu" className="skip-link">
-          Aller au contenu
+      </head>
+      <body className="bg-background text-foreground selection:bg-accent selection:text-white overflow-x-hidden">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-md"
+        >
+          Aller au contenu principal
         </a>
-
-        {/* Couche d'expérience : smooth scroll, curseur, progression */}
-        <SmoothScroll />
-        <ScrollProgress />
-        <Cursor />
-
         <LoadingProvider>
           <ContactProvider>
-            <Navbar />
-            <main id="contenu">{children}</main>
-            <Footer />
+            <Preloader />
+            <ScrollProgress />
+            <Cursor />
+            <SmoothScroll>
+              <div id="main-content">{children}</div>
+            </SmoothScroll>
+            <ContactDialog />
           </ContactProvider>
         </LoadingProvider>
       </body>
