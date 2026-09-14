@@ -6,7 +6,6 @@ import { SITE } from "@/lib/content";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import LoadingProvider from "@/components/providers/LoadingProvider";
 import ContactProvider from "@/components/providers/ContactProvider";
-import Cursor from "@/components/ui/Cursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -36,12 +35,6 @@ export const metadata: Metadata = {
     "social media management",
     "agence web Dakar",
     "acquisition payante",
-    "site web restaurant",
-    "site salle de sport",
-    "site salon de coiffure",
-    "site web supérette",
-    "e-commerce mode cosmétique",
-    "site internet entreprise",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -52,15 +45,9 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
   },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   category: "technology",
 };
@@ -70,55 +57,10 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-/** Données structurées Schema.org (Organization + WebSite). */
-const JSON_LD = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${SITE.url}#organization`,
-      name: SITE.name,
-      url: SITE.url,
-      email: SITE.email,
-      description: DESCRIPTION,
-      slogan: "Nous créons des expériences digitales qui convertissent.",
-      areaServed: "Worldwide",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Dakar",
-        addressCountry: "SN",
-      },
-      sameAs: [
-        "https://www.linkedin.com",
-        "https://www.instagram.com",
-        "https://www.tiktok.com",
-        "https://www.facebook.com",
-      ],
-      makesOffer: [
-        "Développement web",
-        "Référencement SEO",
-        "Publicité digitale",
-        "Social media management",
-      ].map((name) => ({
-        "@type": "Offer",
-        itemOffered: { "@type": "Service", name },
-      })),
-    },
-    {
-      "@type": "WebSite",
-      "@id": `${SITE.url}#website`,
-      url: SITE.url,
-      name: SITE.name,
-      inLanguage: "fr-FR",
-      publisher: { "@id": `${SITE.url}#organization` },
-    },
-  ],
-};
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" className={`${clashDisplay.variable} ${satoshi.variable}`}>
-      <body className="grain bg-void text-bone antialiased">
+      <head>
         {/* PIXEL META — DSM DIGITAL */}
         <Script
           id="meta-pixel"
@@ -138,20 +80,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             `,
           }}
         />
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
-        />
-
+      </head>
+      <body className="grain bg-void text-bone antialiased">
         <a href="#contenu" className="skip-link">
           Aller au contenu
         </a>
 
-        {/* Couche d'expérience : smooth scroll, curseur, progression */}
+        {/* Couche d'expérience */}
         <SmoothScroll />
         <ScrollProgress />
-        <Cursor />
 
         <LoadingProvider>
           <ContactProvider>
