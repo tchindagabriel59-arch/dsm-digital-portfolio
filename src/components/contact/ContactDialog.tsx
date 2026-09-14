@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useContact } from "@/components/providers/ContactProvider";
+import { useContactDialog } from "@/components/providers/ContactProvider";
 import { SERVICES, BUDGETS } from "@/lib/content";
 import { X, Check, Loader2, Send } from "lucide-react";
 
 export function ContactDialog() {
-  const { isOpen, closeContact } = useContact();
+  const contactCtx = useContactDialog();
+  const isOpen = contactCtx?.isOpen;
+  const closeContact = contactCtx?.closeContact || contactCtx?.close || (() => {});
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
