@@ -272,9 +272,9 @@ export const HERO = {
   titleLines: [
     "Transformez votre",
     "présence digitale",
-    "en machine",
+    "en machine à",
   ],
-  titleHighlight: "à générer des clients",
+  titleHighlight: "générer des clients",
   subtitle:
     "Création de sites web sur-mesure, SEO et campagnes publicitaires ultra-ciblées (Meta, TikTok, Google). Nous construisons votre écosystème digital pour des résultats mesurables sous 30 jours.",
   ctaPrimary: "Obtenir une étude & devis gratuit",
