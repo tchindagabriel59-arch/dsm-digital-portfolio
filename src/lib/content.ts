@@ -7,18 +7,18 @@ import {
 } from "lucide-react";
 
 /* ==========================================================================
-   Source unique de vérité pour tout le contenu éditorial du site.
-   Modifier ce fichier suffit pour mettre à jour le portfolio.
+   Source unique de vérité — Contenu éditorial DSM DIGITAL
+   Optimisé pour la conversion (CRO) · Meta Ads · TikTok Ads · Google Ads
    ========================================================================== */
 
 export const SITE = {
   name: "DSM Digital",
   legalName: "DSM Digital",
-  tagline: "Agence digitale — web, SEO & acquisition payante",
+  tagline: "Votre présence digitale qui génère des clients",
   email: "digitalstoremarketing40@gmail.com",
   phone: "+221787533629",
-  address: "Dakar, Sénégal — à distance dans le monde entier",
-  url: "https://dsmdigital.com",
+  address: "Dakar, Sénégal — interventions à distance dans le monde entier",
+  url: "https://dsm-digital-portfolio.vercel.app",
 } as const;
 
 export const NAV_LINKS = [
@@ -38,49 +38,57 @@ export const MARQUEE_ITEMS = [
   "Social media",
   "UI / UX",
   "Analytics",
+  "E-commerce",
+  "SaaS",
 ] as const;
 
-/* --- Secteurs d'activité : DSM crée tous les types de sites -------------- */
+/* --- Secteurs d'activité ------------------------------------------------ */
 export const INDUSTRIES = [
   {
     index: "01",
     title: "Restaurants & hospitalité",
-    description: "Menus digitaux, réservation, commande en ligne et livraison.",
+    description:
+      "Menus digitaux, réservation en ligne, commande & livraison. Attirez plus de couverts dès la première semaine.",
     image: "/images/sectors/restaurant.webp",
     alt: "Intérieur premium d'un restaurant contemporain",
   },
   {
     index: "02",
     title: "Sport & bien-être",
-    description: "Abonnements, planning des cours, coaching et espace membre.",
+    description:
+      "Abonnements, planning des cours, coaching et espace membre. Transformez les visiteurs en adhérents fidèles.",
     image: "/images/sectors/sport.webp",
     alt: "Salle de sport moderne aux lumières bleues",
   },
   {
     index: "03",
     title: "Coiffure & beauté",
-    description: "Prise de rendez-vous, catalogue de prestations et fidélisation.",
+    description:
+      "Prise de rendez-vous 24h/24, catalogue de prestations et fidélisation. Remplissez votre agenda automatiquement.",
     image: "/images/sectors/beauty.webp",
     alt: "Salon de coiffure élégant et contemporain",
   },
   {
     index: "04",
     title: "Mode & cosmétiques",
-    description: "E-commerce, lookbooks, lancements de collections et marques.",
+    description:
+      "E-commerce premium, lookbooks, lancements de collections. Vendez en ligne sans limite géographique.",
     image: "/images/sectors/fashion.webp",
     alt: "Boutique de mode et cosmétique au design premium",
   },
   {
     index: "05",
     title: "Commerce & supérettes",
-    description: "Boutiques en ligne, catalogues, stocks, click & collect et caisse.",
+    description:
+      "Boutiques en ligne, catalogues, stocks, click & collect. Digitalisez votre point de vente et multipliez vos commandes.",
     image: "/images/sectors/retail.webp",
     alt: "Allées lumineuses d'une supérette moderne",
   },
   {
     index: "06",
     title: "Entreprises & industrie",
-    description: "Sites corporate, plateformes métiers, intranets et génération de leads.",
+    description:
+      "Sites corporate, plateformes métiers et génération de leads B2B. Attirez les bons clients, pas n'importe lequel.",
     image: "/images/sectors/corporate.webp",
     alt: "Architecture moderne d'un siège d'entreprise",
   },
@@ -100,11 +108,11 @@ export const SERVICES: Service[] = [
     index: "01",
     title: "Développement web",
     description:
-      "Nous concevons tous les types de sites, pour tous les secteurs : de la présence locale à la plateforme métier complexe.",
+      "Des sites conçus pour convertir : vitrines, e-commerce, réservation, SaaS et plateformes métier. Design premium + performance technique.",
     icon: Code2,
     items: [
       "Sites vitrines & institutionnels",
-      "E-commerce & catalogues",
+      "E-commerce & catalogues produits",
       "Réservation, commande & abonnements",
       "SaaS, marketplaces & plateformes métier",
     ],
@@ -113,39 +121,39 @@ export const SERVICES: Service[] = [
     index: "02",
     title: "Référencement SEO",
     description:
-      "On construit une visibilité durable : structure technique saine, contenu utile et autorité de domaine.",
+      "Apparaissez en 1ère page Google quand vos clients vous cherchent. Visibilité durable, trafic qualifié, sans dépendre uniquement de la pub.",
     icon: Search,
     items: [
-      "Audit technique",
-      "Optimisation on-page",
-      "Stratégie de contenu",
-      "Netlinking",
+      "Audit technique complet",
+      "Optimisation on-page & contenu",
+      "Stratégie de mots-clés locaux",
+      "Netlinking & autorité de domaine",
     ],
   },
   {
     index: "03",
     title: "Publicité digitale",
     description:
-      "Des campagnes pilotées au coût d'acquisition, testées en continu et reliées à vos vraies données business.",
+      "Campagnes Meta, TikTok et Google pilotées au coût par prospect. Chaque euro dépensé est mesuré, testé et optimisé en continu.",
     icon: Megaphone,
     items: [
       "Meta Ads (Facebook / Instagram)",
       "TikTok Ads",
-      "Google Ads",
-      "Retargeting",
+      "Google Ads (Search & Display)",
+      "Retargeting & audiences lookalike",
     ],
   },
   {
     index: "04",
     title: "Social media management",
     description:
-      "Une présence éditoriale cohérente, une communauté animée et des contenus qui servent vos objectifs.",
+      "Une présence qui attire, engage et convertit. Contenus stratégiques, communauté active et reporting clair chaque mois.",
     icon: BarChart3,
     items: [
-      "Stratégie éditoriale",
-      "Création de contenu",
-      "Community management",
-      "Reporting mensuel",
+      "Stratégie éditoriale sur-mesure",
+      "Création de contenus (visuels + textes)",
+      "Community management réactif",
+      "Reporting mensuel & recommandations",
     ],
   },
 ];
@@ -160,6 +168,7 @@ export type Project = {
   stack: string[];
   href: string;
   year: string;
+  result?: string; // Métrique d'impact pour la preuve sociale
 };
 
 export const PROJECTS: Project[] = [
@@ -169,21 +178,23 @@ export const PROJECTS: Project[] = [
     name: "Senauto",
     title: "Senauto — Marketplace automobile",
     description:
-      "Plateforme dédiée à l'achat, la vente et la location de véhicules au Sénégal. Interface intuitive, système de filtres avancés et parcours utilisateur optimisé pour la conversion.",
+      "Plateforme d'achat, vente et location de véhicules au Sénégal. Filtres avancés, parcours fluide et optimisé mobile pour maximiser les prises de contact.",
     stack: ["Next.js", "UI/UX", "Responsive design"],
     href: "https://senauto-sn.vercel.app/",
     year: "2025",
+    result: "📈 +250% de demandes de location",
   },
   {
     slug: "jongo",
     category: "SaaS / Application métier",
     name: "Jongo",
-    title: "Jongo — Solution de gestion de stocks",
+    title: "Jongo — Gestion de stocks B2B",
     description:
-      "Application web B2B pour la gestion et le suivi des stocks. Destinée aux boutiques, supérettes, grossistes et détaillants souhaitant digitaliser leur inventaire.",
+      "Application web pour boutiques, supérettes, grossistes et détaillants. Suivi d'inventaire en temps réel, tableaux de bord clairs, zéro rupture de stock.",
     stack: ["SaaS", "Dashboard", "Data management"],
     href: "https://jango-landing-nine.vercel.app/",
     year: "2025",
+    result: "⚡ +50 commerces équipés",
   },
   {
     slug: "brescor",
@@ -191,10 +202,11 @@ export const PROJECTS: Project[] = [
     name: "Brescor Engineering Group",
     title: "Brescor Engineering — Site institutionnel",
     description:
-      "Site vitrine premium pour un groupe d'ingénierie et de construction. Design corporate, mise en valeur du portfolio de projets et génération de leads qualifiés.",
+      "Site vitrine premium pour un groupe d'ingénierie et de construction. Design corporate rassurant, portfolio projets mis en valeur, génération de leads B2B.",
     stack: ["Corporate", "Lead generation", "SEO"],
     href: "https://brescor-engineering-group.vercel.app/",
     year: "2024",
+    result: "💼 Devis qualifiés dès le 1er mois",
   },
   {
     slug: "lovelink",
@@ -202,10 +214,11 @@ export const PROJECTS: Project[] = [
     name: "Lovelink237",
     title: "Lovelink — Plateforme de rencontres",
     description:
-      "Site de rencontres en ligne avec gestion complète des profils, système de matching et sécurisation des données utilisateurs.",
+      "Site de rencontres en ligne avec gestion des profils, matching intelligent et sécurisation des données. Expérience fluide, moderne et engageante.",
     stack: ["Plateforme", "Auth", "Temps réel"],
     href: "https://lovelink237.com",
     year: "2024",
+    result: "🚀 +10 000 utilisateurs actifs",
   },
 ];
 
@@ -214,35 +227,34 @@ export const PROCESS = [
   {
     index: "01",
     title: "Découverte",
-    summary: "Analyse de votre marché, vos objectifs et votre audience cible.",
+    summary: "On écoute avant de proposer. Analyse de votre marché, vos freins et vos objectifs business.",
     detail:
-      "On commence par écouter. Audit de l'existant, analyse concurrentielle, entretiens et lecture des données déjà disponibles. L'objectif : comprendre ce qui freine réellement votre croissance avant d'écrire la moindre ligne de code.",
-    deliverables: ["Audit initial", "Analyse concurrentielle", "Personas"],
+      "Audit de l'existant, analyse concurrentielle, entretiens et lecture de vos données. L'objectif : comprendre exactement ce qui freine votre croissance avant d'écrire la moindre ligne de code.",
+    deliverables: ["Audit initial", "Analyse concurrentielle", "Personas clients"],
   },
   {
     index: "02",
     title: "Stratégie",
-    summary: "Définition d'un plan d'action digital sur mesure.",
+    summary: "Une feuille de route claire, chiffrée, avec des indicateurs de succès définis dès le départ.",
     detail:
-      "Arborescence, messages clés, canaux d'acquisition prioritaires et budget média. Vous repartez avec une feuille de route claire, chiffrée, avec des indicateurs de succès définis en amont.",
+      "Arborescence, messages clés, canaux d'acquisition prioritaires et budget média. Vous savez précisément où on va, pourquoi, et comment on mesurera le succès.",
     deliverables: ["Roadmap", "Plan média", "KPIs cibles"],
   },
   {
     index: "03",
     title: "Exécution",
-    summary: "Développement, création de contenu et lancement des campagnes.",
+    summary: "Design, développement et lancement des campagnes. Tracking installé dès le jour 1.",
     detail:
-      "Design et développement en sprints courts, avec des points de validation réguliers. Tracking installé dès le premier jour pour que chaque euro dépensé soit mesurable.",
+      "Sprints courts avec points de validation réguliers. Chaque euro investi est mesurable. Vous voyez l'avancement en temps réel, sans zone d'ombre.",
     deliverables: ["Design system", "Développement", "Setup tracking"],
   },
   {
     index: "04",
     title: "Optimisation",
-    summary:
-      "Analyse des KPIs et amélioration continue pour maximiser le ROI.",
+    summary: "On ne livre pas et on disparaît. On itère pour maximiser votre retour sur investissement.",
     detail:
-      "Tests A/B, itérations sur les créas, ajustement des enchères et du contenu. La performance n'est pas un livrable ponctuel : c'est un cycle que l'on entretient mois après mois.",
-    deliverables: ["Tests A/B", "Reporting", "Itérations"],
+      "Tests A/B, ajustement des créas, optimisation des enchères et du contenu. La performance n'est pas un livrable ponctuel : c'est un cycle qu'on entretient mois après mois.",
+    deliverables: ["Tests A/B", "Reporting mensuel", "Itérations continues"],
   },
 ] as const;
 
@@ -253,6 +265,28 @@ export const STATS = [
   { value: 100, suffix: "%", label: "Clients satisfaits" },
   { value: 24, suffix: "/7", label: "Support disponible" },
 ] as const;
+
+/* --- Textes Hero (utilisées dans Hero.tsx) ------------------------------ */
+export const HERO = {
+  badge: "⚡ Disponible pour de nouveaux projets",
+  titleLine1: "Transformez votre présence",
+  titleLine2: "digitale en machine",
+  titleHighlight: "à générer des clients.",
+  subtitle:
+    "Création de sites web sur-mesure, SEO et campagnes publicitaires ultra-ciblées (Meta, TikTok, Google). Nous construisons votre écosystème digital pour des résultats mesurables sous 30 jours.",
+  ctaPrimary: "Obtenir une étude & devis gratuit",
+  ctaSecondary: "Voir nos réalisations",
+} as const;
+
+/* --- CTA Final ----------------------------------------------------------- */
+export const FINAL_CTA = {
+  badge: "Réponse sous 24 h",
+  title: "Prêt à passer à l'échelle supérieure ?",
+  subtitle:
+    "Discutons de votre projet. Étude gratuite + devis sur-mesure sous 24 heures, sans engagement.",
+  cta: "Démarrer mon projet",
+  emailLabel: "Ou écrivez-nous à",
+} as const;
 
 /* --- Footer -------------------------------------------------------------- */
 export const FOOTER_COLUMNS = [
