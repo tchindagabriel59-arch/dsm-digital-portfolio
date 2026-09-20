@@ -54,7 +54,7 @@ export default function Hero() {
           variants={container}
           initial="hidden"
           animate={state}
-          className="lg:col-span-7 xl:col-span-7"
+          className="lg:col-span-8 xl:col-span-7"
         >
           {/* Pastille de disponibilité */}
           <motion.div variants={fade} className="mb-6 md:mb-8 flex items-center gap-3">
@@ -67,11 +67,11 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Titre responsive (Taille adaptée pour smartphone 320px+ & Desktop) */}
-          <h1 className="display text-[clamp(1.75rem,5.8vw,5.2rem)] leading-[1.08] sm:leading-[1.05] tracking-tight text-bone">
+          {/* Titre responsive corrigé (Taille fluide & sans blocage) */}
+          <h1 className="display text-[clamp(1.75rem,4.2vw,3.8rem)] leading-[1.08] sm:leading-[1.06] tracking-tight text-bone">
             {HERO.titleLines.map((text) => (
               <span key={text} className="block overflow-hidden pb-[0.04em]">
-                <motion.span variants={line} className="block whitespace-nowrap">
+                <motion.span variants={line} className="block">
                   {text}
                 </motion.span>
               </span>
@@ -147,7 +147,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={ready ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 1.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mx-auto w-full max-w-xs sm:max-w-md lg:col-span-5 lg:max-w-none xl:col-span-5"
+          className="relative mx-auto w-full max-w-xs sm:max-w-md lg:col-span-4 lg:max-w-none xl:col-span-5"
         >
           <HeroVisual />
 
