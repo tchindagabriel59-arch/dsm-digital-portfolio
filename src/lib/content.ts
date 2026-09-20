@@ -269,9 +269,12 @@ export const STATS = [
 /* --- Textes Hero (utilisées dans Hero.tsx) ------------------------------ */
 export const HERO = {
   badge: "⚡ Disponible pour de nouveaux projets",
-  titleLine1: "Transformez votre présence",
-  titleLine2: "digitale en machine",
-  titleHighlight: "à générer des clients.",
+  titleLines: [
+    "Transformez votre",
+    "présence digitale",
+    "en machine",
+  ],
+  titleHighlight: "à générer des clients",
   subtitle:
     "Création de sites web sur-mesure, SEO et campagnes publicitaires ultra-ciblées (Meta, TikTok, Google). Nous construisons votre écosystème digital pour des résultats mesurables sous 30 jours.",
   ctaPrimary: "Obtenir une étude & devis gratuit",
