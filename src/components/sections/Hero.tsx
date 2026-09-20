@@ -7,7 +7,7 @@ import Marquee from "@/components/ui/Marquee";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useAppReady } from "@/components/providers/LoadingProvider";
 import { useContactDialog } from "@/components/providers/ContactProvider";
-import { MARQUEE_ITEMS, PROJECTS } from "@/lib/content";
+import { HERO, MARQUEE_ITEMS, PROJECTS } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import styles from "./hero.module.css";
 
@@ -24,7 +24,11 @@ const line: Variants = {
 
 const fade: Variants = {
   hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+  },
 };
 
 export default function Hero() {
@@ -59,12 +63,12 @@ export default function Hero() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
             <span className="font-mono text-[10px] tracking-[0.22em] text-ash uppercase">
-              Disponible pour de nouveaux projets
+              {HERO.badge}
             </span>
           </motion.div>
 
           <h1 className="display text-[clamp(2.35rem,7.4vw,6.5rem)] text-bone">
-            {["Nous créons", "des expériences", "digitales qui"].map((text) => (
+            {[HERO.titleLine1, HERO.titleLine2].map((text) => (
               <span key={text} className="block overflow-hidden pb-[0.06em]">
                 <motion.span variants={line} className="block">
                   {text}
@@ -80,7 +84,7 @@ export default function Hero() {
                     "text-accent",
                   )}
                 >
-                  convertissent
+                  {HERO.titleHighlight.replace(".", "")}
                 </span>
                 <span className="text-bone">.</span>
               </motion.span>
@@ -91,9 +95,7 @@ export default function Hero() {
             variants={fade}
             className="mt-8 max-w-xl text-base leading-relaxed text-ash md:text-lg"
           >
-            Nous concevons tous les types de sites web, quel que soit votre
-            secteur — puis nous les rendons visibles grâce au SEO et à
-            l’acquisition payante.
+            {HERO.subtitle}
           </motion.p>
 
           <motion.div
@@ -101,20 +103,20 @@ export default function Hero() {
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <MagneticButton
-              href="#realisations"
               variant="primary"
-              ariaLabel="Voir nos réalisations"
+              onClick={openContact}
+              ariaLabel={HERO.ctaPrimary}
             >
-              Voir nos réalisations
+              {HERO.ctaPrimary}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </MagneticButton>
 
             <MagneticButton
+              href="#realisations"
               variant="ghost"
-              onClick={openContact}
-              ariaLabel="Nous contacter"
+              ariaLabel={HERO.ctaSecondary}
             >
-              Nous contacter
+              {HERO.ctaSecondary}
             </MagneticButton>
           </motion.div>
 
