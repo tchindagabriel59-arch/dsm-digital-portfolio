@@ -39,7 +39,7 @@ export default function Hero() {
   return (
     <section
       id="accueil"
-      className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 md:pt-32"
+      className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-24 md:pt-32"
     >
       {/* Décor : grille technique + aura bleue */}
       <div
@@ -48,7 +48,7 @@ export default function Hero() {
       />
       <div aria-hidden className={styles.aura} />
 
-      <div className="shell relative grid flex-1 items-center gap-14 pb-10 lg:grid-cols-12 lg:gap-6">
+      <div className="shell relative grid flex-1 items-center gap-10 pb-10 lg:grid-cols-12 lg:gap-6">
         {/* ---------------------------- Colonne texte --------------------- */}
         <motion.div
           variants={container}
@@ -57,34 +57,35 @@ export default function Hero() {
           className="lg:col-span-7 xl:col-span-7"
         >
           {/* Pastille de disponibilité */}
-          <motion.div variants={fade} className="mb-8 flex items-center gap-3">
+          <motion.div variants={fade} className="mb-6 md:mb-8 flex items-center gap-3">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="font-mono text-[10px] tracking-[0.22em] text-ash uppercase">
+            <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.22em] text-ash uppercase">
               {HERO.badge}
             </span>
           </motion.div>
 
-          <h1 className="display text-[clamp(2.35rem,7.4vw,6.5rem)] text-bone">
-            {[HERO.titleLine1, HERO.titleLine2].map((text) => (
-              <span key={text} className="block overflow-hidden pb-[0.06em]">
-                <motion.span variants={line} className="block">
+          {/* Titre responsive (Taille adaptée pour smartphone 320px+ & Desktop) */}
+          <h1 className="display text-[clamp(1.75rem,5.8vw,5.2rem)] leading-[1.08] sm:leading-[1.05] tracking-tight text-bone">
+            {HERO.titleLines.map((text) => (
+              <span key={text} className="block overflow-hidden pb-[0.04em]">
+                <motion.span variants={line} className="block whitespace-nowrap">
                   {text}
                 </motion.span>
               </span>
             ))}
-            <span className="block overflow-hidden pb-[0.12em]">
+            <span className="block overflow-hidden pb-[0.1em]">
               <motion.span variants={line} className="block">
                 <span
                   className={cn(
                     styles.underline,
                     ready && styles.underlineActive,
-                    "text-accent",
+                    "text-accent inline-block",
                   )}
                 >
-                  {HERO.titleHighlight.replace(".", "")}
+                  {HERO.titleHighlight}
                 </span>
                 <span className="text-bone">.</span>
               </motion.span>
@@ -93,14 +94,14 @@ export default function Hero() {
 
           <motion.p
             variants={fade}
-            className="mt-8 max-w-xl text-base leading-relaxed text-ash md:text-lg"
+            className="mt-6 sm:mt-8 max-w-xl text-sm sm:text-base md:text-lg leading-relaxed text-ash"
           >
             {HERO.subtitle}
           </motion.p>
 
           <motion.div
             variants={fade}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
           >
             <MagneticButton
               variant="primary"
@@ -123,16 +124,16 @@ export default function Hero() {
           {/* Preuve sociale discrète */}
           <motion.div
             variants={fade}
-            className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-line pt-6"
+            className="mt-10 sm:mt-14 flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-3 border-t border-line pt-5 sm:pt-6"
           >
-            <span className="font-mono text-[10px] tracking-[0.2em] text-ash-dim uppercase">
+            <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-ash-dim uppercase">
               Ils nous font confiance
             </span>
-            <div className="flex flex-wrap items-center gap-x-7 gap-y-2">
+            <div className="flex flex-wrap items-center gap-x-5 sm:gap-x-7 gap-y-2">
               {PROJECTS.map((project) => (
                 <span
                   key={project.slug}
-                  className="font-display text-sm font-medium tracking-tight text-ash transition-colors duration-300 hover:text-bone"
+                  className="font-display text-xs sm:text-sm font-medium tracking-tight text-ash transition-colors duration-300 hover:text-bone"
                 >
                   {project.name}
                 </span>
@@ -146,7 +147,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={ready ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 1.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none xl:col-span-5"
+          className="relative mx-auto w-full max-w-xs sm:max-w-md lg:col-span-5 lg:max-w-none xl:col-span-5"
         >
           <HeroVisual />
 
@@ -168,7 +169,7 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={ready ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 0.9 }}
-          className="shell mb-8 flex items-end justify-between"
+          className="shell mb-6 sm:mb-8 flex items-end justify-between"
         >
           <div className="flex items-center gap-4">
             <div className={styles.scrollTrack}>
@@ -181,13 +182,13 @@ export default function Hero() {
           <a
             href="#services"
             aria-label="Aller à la section services"
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ash transition-all duration-300 hover:border-accent hover:text-accent"
+            className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-line text-ash transition-all duration-300 hover:border-accent hover:text-accent"
           >
             <ArrowDown className="h-4 w-4" />
           </a>
         </motion.div>
 
-        <div className="border-y border-line bg-surface/40 py-4">
+        <div className="border-y border-line bg-surface/40 py-3 sm:py-4">
           <Marquee items={MARQUEE_ITEMS} />
         </div>
       </div>
