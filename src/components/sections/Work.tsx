@@ -20,7 +20,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const y = useTransform(scrollYProgress, [0, 1], [34, -34]);
 
   const reversed = index % 2 === 1;
-  const displayUrl = project.href.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const displayUrl = project.href
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
 
   return (
     <motion.article
@@ -56,7 +58,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <BrowserFrame url={displayUrl}>
               <ProjectMockup
                 slug={project.slug}
-                alt={`Aperçu temporaire illustré du projet ${project.title}`}
+                alt={`Aperçu du projet ${project.title}`}
                 image={`/images/projects/${project.slug}.webp`}
               />
             </BrowserFrame>
@@ -77,6 +79,15 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <h3 className="display text-[clamp(1.65rem,2.6vw,2.35rem)] text-bone">
             {project.title}
           </h3>
+
+          {/* BADGE RÉSULTAT — Preuve sociale à fort impact */}
+          {project.result ? (
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/10 px-3.5 py-1.5">
+              <span className="text-sm font-medium text-accent">
+                {project.result}
+              </span>
+            </div>
+          ) : null}
 
           <p className="mt-5 text-sm leading-relaxed text-ash md:text-[0.95rem]">
             {project.description}
@@ -134,7 +145,7 @@ export default function Work() {
           label="Réalisations"
           title="Sélection de projets récents."
           accent={["récents."]}
-          description="Des marques qui nous ont fait confiance pour construire leur présence digitale."
+          description="Des marques qui nous ont fait confiance pour construire leur présence digitale — et obtenir des résultats mesurables."
           align="between"
           action={
             <div className="hidden items-center gap-3 md:flex">
