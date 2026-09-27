@@ -8,7 +8,6 @@ import {
 
 /* ==========================================================================
    Source unique de vérité — Contenu éditorial DSM DIGITAL
-   Optimisé pour la conversion (CRO) · Meta Ads · TikTok Ads · Google Ads
    ========================================================================== */
 
 export const SITE = {
@@ -30,16 +29,14 @@ export const NAV_LINKS = [
 
 /* --- Bandeau défilant du hero ------------------------------------------- */
 export const MARQUEE_ITEMS = [
-  "Développement web",
-  "SEO",
-  "Meta Ads",
+  "Création de sites web",
+  "Référencement Google",
+  "Publicité Meta Ads",
   "TikTok Ads",
   "Google Ads",
-  "Social media",
-  "UI / UX",
-  "Analytics",
+  "Gestion Réseaux Sociaux",
   "E-commerce",
-  "SaaS",
+  "Applications sur-mesure",
 ] as const;
 
 /* --- Secteurs d'activité ------------------------------------------------ */
@@ -48,7 +45,7 @@ export const INDUSTRIES = [
     index: "01",
     title: "Restaurants & hospitalité",
     description:
-      "Menus digitaux, réservation en ligne, commande & livraison. Attirez plus de couverts dès la première semaine.",
+      "Menus digitaux, réservation en ligne, commande & livraison. Attirez plus de clients dès la première semaine.",
     image: "/images/sectors/restaurant.webp",
     alt: "Intérieur premium d'un restaurant contemporain",
   },
@@ -56,7 +53,7 @@ export const INDUSTRIES = [
     index: "02",
     title: "Sport & bien-être",
     description:
-      "Abonnements, planning des cours, coaching et espace membre. Transformez les visiteurs en adhérents fidèles.",
+      "Abonnements, planning des cours, coaching et espace membre. Transformez vos visiteurs en membres fidèles.",
     image: "/images/sectors/sport.webp",
     alt: "Salle de sport moderne aux lumières bleues",
   },
@@ -72,7 +69,7 @@ export const INDUSTRIES = [
     index: "04",
     title: "Mode & cosmétiques",
     description:
-      "E-commerce premium, lookbooks, lancements de collections. Vendez en ligne sans limite géographique.",
+      "Boutiques en ligne, catalogues, lancements de collections. Vendez en ligne sans limite géographique.",
     image: "/images/sectors/fashion.webp",
     alt: "Boutique de mode et cosmétique au design premium",
   },
@@ -80,21 +77,21 @@ export const INDUSTRIES = [
     index: "05",
     title: "Commerce & supérettes",
     description:
-      "Boutiques en ligne, catalogues, stocks, click & collect. Digitalisez votre point de vente et multipliez vos commandes.",
+      "Boutiques en ligne, catalogues, gestion de stock et caisse. Digitalisez votre commerce et vendez plus.",
     image: "/images/sectors/retail.webp",
     alt: "Allées lumineuses d'une supérette moderne",
   },
   {
     index: "06",
-    title: "Entreprises & industrie",
+    title: "Entreprises & BTP",
     description:
-      "Sites corporate, plateformes métiers et génération de leads B2B. Attirez les bons clients, pas n'importe lequel.",
+      "Sites vitrines professionnels, présentation de services et génération de devis. Attirez les bons clients B2B.",
     image: "/images/sectors/corporate.webp",
     alt: "Architecture moderne d'un siège d'entreprise",
   },
 ] as const;
 
-/* --- Section services ---------------------------------------------------- */
+/* --- Section services (Adaptée Marché Francophone / Afrique) -------------- */
 export type Service = {
   index: string;
   title: string;
@@ -106,54 +103,54 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     index: "01",
-    title: "Développement web",
+    title: "Création de sites internet",
     description:
-      "Des sites conçus pour convertir : vitrines, e-commerce, réservation, SaaS et plateformes métier. Design premium + performance technique.",
+      "Nous concevons des sites professionnels sur-mesure : sites vitrines, boutiques en ligne, réservation, catalogues et plateformes métier. Design moderne + rapidité sur mobile.",
     icon: Code2,
     items: [
-      "Sites vitrines & institutionnels",
-      "E-commerce & catalogues produits",
-      "Réservation, commande & abonnements",
-      "SaaS, marketplaces & plateformes métier",
+      "Sites vitrines pour entreprises & PME",
+      "Boutiques e-commerce & catalogues",
+      "Systèmes de réservation & commande",
+      "Applications & plateformes sur-mesure",
     ],
   },
   {
     index: "02",
-    title: "Référencement SEO",
+    title: "Référencement Google (SEO)",
     description:
-      "Apparaissez en 1ère page Google quand vos clients vous cherchent. Visibilité durable, trafic qualifié, sans dépendre uniquement de la pub.",
+      "Soyez visible sur Google en 1ère page quand des clients cherchent vos services dans votre ville ou pays. Recevez du trafic qualifié tous les jours sans payer chaque clic.",
     icon: Search,
     items: [
-      "Audit technique complet",
-      "Optimisation on-page & contenu",
-      "Stratégie de mots-clés locaux",
-      "Netlinking & autorité de domaine",
+      "Positionnement sur les recherches Google",
+      "Optimisation de votre fiche Google Business",
+      "Référencement local (Dakar, Yaoundé, Abidjan...)",
+      "Rédaction de contenus optimisés",
     ],
   },
   {
     index: "03",
-    title: "Publicité digitale",
+    title: "Publicité sponsorisée (Ads)",
     description:
-      "Campagnes Meta, TikTok et Google pilotées au coût par prospect. Chaque euro dépensé est mesuré, testé et optimisé en continu.",
+      "Campagnes publicitaires ciblées sur Facebook, Instagram, TikTok et Google. Attirez directement des clients prêts à acheter vos produits ou services.",
     icon: Megaphone,
     items: [
-      "Meta Ads (Facebook / Instagram)",
-      "TikTok Ads",
-      "Google Ads (Search & Display)",
-      "Retargeting & audiences lookalike",
+      "Publicités Facebook & Instagram (Meta)",
+      "Campagnes vidéo TikTok Ads",
+      "Publicités sur les recherches Google",
+      "Ciblage précis de vos futurs clients",
     ],
   },
   {
     index: "04",
-    title: "Social media management",
+    title: "Gestion de vos réseaux sociaux",
     description:
-      "Une présence qui attire, engage et convertit. Contenus stratégiques, communauté active et reporting clair chaque mois.",
+      "Nous créons des visuels attractifs, rédigeons vos publications et animons vos pages Facebook, Instagram et TikTok pour booster votre notoriété et crédibilité.",
     icon: BarChart3,
     items: [
-      "Stratégie éditoriale sur-mesure",
-      "Création de contenus (visuels + textes)",
-      "Community management réactif",
-      "Reporting mensuel & recommandations",
+      "Création de visuels & vidéos pros",
+      "Rédaction & publication régulière",
+      "Gestion & réponse aux messages",
+      "Rapports de visibilité mensuels",
     ],
   },
 ];
@@ -168,57 +165,57 @@ export type Project = {
   stack: string[];
   href: string;
   year: string;
-  result?: string; // Métrique d'impact pour la preuve sociale
+  result?: string;
 };
 
 export const PROJECTS: Project[] = [
   {
     slug: "senauto",
-    category: "Plateforme web / Marketplace",
+    category: "Site Automobile / Vente & Location",
     name: "Senauto",
-    title: "Senauto — Marketplace automobile",
+    title: "Senauto — Site d'achat, vente & location auto",
     description:
-      "Plateforme d'achat, vente et location de véhicules au Sénégal. Filtres avancés, parcours fluide et optimisé mobile pour maximiser les prises de contact.",
-    stack: ["Next.js", "UI/UX", "Responsive design"],
+      "Plateforme dédiée à l'achat, la vente et la location de véhicules au Sénégal. Recherche rapide, filtres par budget et contact direct WhatsApp/Appel.",
+    stack: ["Site Web", "UI/UX", "Optimisé Mobile"],
     href: "https://senauto-sn.vercel.app/",
     year: "2025",
     result: "📈 +250% de demandes de location",
   },
   {
     slug: "jongo",
-    category: "SaaS / Application métier",
+    category: "Logiciel / Gestion de Stock",
     name: "Jongo",
-    title: "Jongo — Gestion de stocks B2B",
+    title: "Jongo — Solution de gestion de stocks B2B",
     description:
-      "Application web pour boutiques, supérettes, grossistes et détaillants. Suivi d'inventaire en temps réel, tableaux de bord clairs, zéro rupture de stock.",
-    stack: ["SaaS", "Dashboard", "Data management"],
+      "Application web pour boutiques, supérettes, grossistes et détaillants. Suivi d'inventaire facile, gestion des entrées/sorties et rapports de ventes.",
+    stack: ["Logiciel Web", "Gestion", "Tableau de bord"],
     href: "https://jango-landing-nine.vercel.app/",
     year: "2025",
     result: "⚡ +50 commerces équipés",
   },
   {
     slug: "brescor",
-    category: "Site corporate",
+    category: "Site Vitrine / BTP & Ingénierie",
     name: "Brescor Engineering Group",
-    title: "Brescor Engineering — Site institutionnel",
+    title: "Brescor Engineering — Site d'entreprise",
     description:
-      "Site vitrine premium pour un groupe d'ingénierie et de construction. Design corporate rassurant, portfolio projets mis en valeur, génération de leads B2B.",
-    stack: ["Corporate", "Lead generation", "SEO"],
+      "Site vitrine professionnel pour une grande entreprise d'ingénierie et BTP. Présentation des chantiers, crédibilité maximale et demandes de devis B2B.",
+    stack: ["Site Vitrine", "Génération de Devis", "SEO"],
     href: "https://brescor-engineering-group.vercel.app/",
     year: "2024",
     result: "💼 Devis qualifiés dès le 1er mois",
   },
   {
     slug: "lovelink",
-    category: "Plateforme communautaire",
+    category: "Plateforme / Rencontres",
     name: "Lovelink237",
-    title: "Lovelink — Plateforme de rencontres",
+    title: "Lovelink — Site de rencontres en ligne",
     description:
-      "Site de rencontres en ligne avec gestion des profils, matching intelligent et sécurisation des données. Expérience fluide, moderne et engageante.",
-    stack: ["Plateforme", "Auth", "Temps réel"],
+      "Plateforme communautaire avec création de profils, recherche par affinité et mise en relation sécurisée. Design attractif et rapide.",
+    stack: ["Plateforme Web", "Mise en relation", "Securisée"],
     href: "https://lovelink237.com",
     year: "2024",
-    result: "🚀 +10 000 utilisateurs actifs",
+    result: "🚀 +10 000 utilisateurs inscrits",
   },
 ];
 
@@ -226,47 +223,47 @@ export const PROJECTS: Project[] = [
 export const PROCESS = [
   {
     index: "01",
-    title: "Découverte",
-    summary: "On écoute avant de proposer. Analyse de votre marché, vos freins et vos objectifs business.",
+    title: "1. Écoute & Analyse",
+    summary: "Nous étudions votre activité, vos concurrents et vos objectifs avant toute création.",
     detail:
-      "Audit de l'existant, analyse concurrentielle, entretiens et lecture de vos données. L'objectif : comprendre exactement ce qui freine votre croissance avant d'écrire la moindre ligne de code.",
-    deliverables: ["Audit initial", "Analyse concurrentielle", "Personas clients"],
+      "Comprendre votre marché local, vos clients cibles et ce dont vous avez réellement besoin pour faire décoller vos ventes.",
+    deliverables: ["Analyse du besoin", "Stratégie adaptée", "Proposition de projet"],
   },
   {
     index: "02",
-    title: "Stratégie",
-    summary: "Une feuille de route claire, chiffrée, avec des indicateurs de succès définis dès le départ.",
+    title: "2. Conception & Maquette",
+    summary: "Création d'un design moderne, épuré et adapté à votre image de marque.",
     detail:
-      "Arborescence, messages clés, canaux d'acquisition prioritaires et budget média. Vous savez précisément où on va, pourquoi, et comment on mesurera le succès.",
-    deliverables: ["Roadmap", "Plan média", "KPIs cibles"],
+      "Mise en page attrayante, choix des couleurs, mise en valeur de vos produits/services et boutons d'action clairs.",
+    deliverables: ["Maquette visuelle", "Structure des pages", "Validation des textes"],
   },
   {
     index: "03",
-    title: "Exécution",
-    summary: "Design, développement et lancement des campagnes. Tracking installé dès le jour 1.",
+    title: "3. Développement & Lancement",
+    summary: "Mise en ligne de votre site rapide, sécurisé et 100% lisible sur téléphone portable.",
     detail:
-      "Sprints courts avec points de validation réguliers. Chaque euro investi est mesurable. Vous voyez l'avancement en temps réel, sans zone d'ombre.",
-    deliverables: ["Design system", "Développement", "Setup tracking"],
+      "Programmation propre, connexion à votre numéro WhatsApp, formulaires sécurisés et installation des outils de statistiques.",
+    deliverables: ["Site web en ligne", "Nom de domaine", "Tests sur mobiles"],
   },
   {
     index: "04",
-    title: "Optimisation",
-    summary: "On ne livre pas et on disparaît. On itère pour maximiser votre retour sur investissement.",
+    title: "4. Publicité & Résultats",
+    summary: "Nous lançons la publicité sponsorisée pour amener vos premiers clients.",
     detail:
-      "Tests A/B, ajustement des créas, optimisation des enchères et du contenu. La performance n'est pas un livrable ponctuel : c'est un cycle qu'on entretient mois après mois.",
-    deliverables: ["Tests A/B", "Reporting mensuel", "Itérations continues"],
+      "Mise en place des annonces Facebook, Instagram ou TikTok. Suivi des performances pour garantir un vrai retour sur investissement.",
+    deliverables: ["Campagnes de pub", "Statistiques claires", "Suivi continu"],
   },
 ] as const;
 
 /* --- Section chiffres ---------------------------------------------------- */
 export const STATS = [
-  { value: 15, suffix: "+", label: "Projets livrés" },
-  { value: 4, suffix: "", label: "Domaines d'expertise" },
+  { value: 15, suffix: "+", label: "Projets créés" },
+  { value: 4, suffix: "", label: "Services d'expertise" },
   { value: 100, suffix: "%", label: "Clients satisfaits" },
-  { value: 24, suffix: "/7", label: "Support disponible" },
+  { value: 24, suffix: "/7", label: "Disponibilité" },
 ] as const;
 
-/* --- Textes Hero (utilisées dans Hero.tsx) ------------------------------ */
+/* --- Textes Hero --------------------------------------------------------- */
 export const HERO = {
   badge: "⚡ Disponible pour de nouveaux projets",
   titleLines: [
@@ -276,7 +273,7 @@ export const HERO = {
   ],
   titleHighlight: "générer des clients",
   subtitle:
-    "Création de sites web sur-mesure, SEO et campagnes publicitaires ultra-ciblées (Meta, TikTok, Google). Nous construisons votre écosystème digital pour des résultats mesurables sous 30 jours.",
+    "Création de sites internet professionnels, référencement Google et publicités sponsorisées ciblées (Meta, TikTok, Google). Nous développons votre activité pour des résultats sous 30 jours.",
   ctaPrimary: "Obtenir une étude & devis gratuit",
   ctaSecondary: "Voir nos réalisations",
 } as const;
@@ -284,56 +281,12 @@ export const HERO = {
 /* --- CTA Final ----------------------------------------------------------- */
 export const FINAL_CTA = {
   badge: "Réponse sous 24 h",
-  title: "Prêt à passer à l'échelle supérieure ?",
+  title: "Prêt à faire passer votre entreprise au niveau supérieur ?",
   subtitle:
-    "Discutons de votre projet. Étude gratuite + devis sur-mesure sous 24 heures, sans engagement.",
+    "Discutons de votre projet. Étude gratuite + devis clair et détaillé sous 24h, sans engagement.",
   cta: "Démarrer mon projet",
-  emailLabel: "Ou écrivez-nous à",
+  emailLabel: "Ou écrivez-nous directement à",
 } as const;
-
-/* --- Section témoignages (Trust) ---------------------------------------- */
-export type Testimonial = {
-  quote: string;
-  author: string;
-  role: string;
-  company: string;
-  project?: string;
-};
-
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    quote:
-      "DSM Digital n'a pas seulement créé notre marketplace. En 3 mois, nos demandes de location ont plus que doublé. Leur suivi pub Meta a changé la donne.",
-    author: "Moussa Diop",
-    role: "Fondateur",
-    company: "Senauto",
-    project: "Senauto",
-  },
-  {
-    quote:
-      "On cherchait un outil simple pour gérer nos stocks. Jongo a transformé notre quotidien. L'équipe DSM a livré exactement ce qu'il nous fallait, dans les délais.",
-    author: "Aïcha Ndiaye",
-    role: "Directrice opérationnelle",
-    company: "Réseau de boutiques Dakar",
-    project: "Jongo",
-  },
-  {
-    quote:
-      "Site corporate premium, génération de leads dès le premier mois. DSM comprend le B2B et livre un niveau digne des grandes agences internationales.",
-    author: "Ibrahima Fall",
-    role: "Directeur commercial",
-    company: "Brescor Engineering Group",
-    project: "Brescor",
-  },
-  {
-    quote:
-      "De la maquette au lancement pub, tout a été fluide. On a passé les 10 000 utilisateurs plus vite que prévu. Je recommande les yeux fermés.",
-    author: "Kevin Manga",
-    role: "CEO",
-    company: "Lovelink237",
-    project: "Lovelink",
-  },
-];
 
 /* --- Footer -------------------------------------------------------------- */
 export const FOOTER_COLUMNS = [
@@ -341,17 +294,17 @@ export const FOOTER_COLUMNS = [
     title: "Agence",
     links: [
       { label: "À propos", href: "#approche" },
-      { label: "Approche", href: "#approche" },
-      { label: "Carrières", href: "#contact" },
+      { label: "Notre méthode", href: "#approche" },
+      { label: "Contact", href: "#contact" },
     ],
   },
   {
     title: "Services",
     links: [
-      { label: "Développement web", href: "#services" },
-      { label: "Référencement SEO", href: "#services" },
-      { label: "Publicité digitale", href: "#services" },
-      { label: "Social media", href: "#services" },
+      { label: "Création de sites internet", href: "#services" },
+      { label: "Référencement Google (SEO)", href: "#services" },
+      { label: "Publicité sponsorisée (Ads)", href: "#services" },
+      { label: "Gestion Réseaux Sociaux", href: "#services" },
     ],
   },
   {
