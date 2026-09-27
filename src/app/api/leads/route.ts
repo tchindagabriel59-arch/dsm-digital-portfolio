@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     // 3. ENVOI INSTANTANÉ D'EMAIL vers digitalstoremarketing40@gmail.com
-    if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "TON_ACCESS_KEY_ICI") {
+    if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
       try {
         await fetch("https://api.web3forms.com/submit", {
           method: "POST",
