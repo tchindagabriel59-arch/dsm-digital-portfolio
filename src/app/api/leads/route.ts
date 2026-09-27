@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, company, service, budget, message, source } = body;
 
-    // 🔑 Clé lue depuis les variables Vercel
+    // 🔑 Clé lue depuis la variable d'environnement Vercel
     const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY;
 
     console.log("🔥 NOUVEAU PROSPECT REÇU SUR DSM DIGITAL 🔥", {
@@ -41,27 +41,32 @@ export async function POST(request: Request) {
       console.error("Note BDD:", dbError);
     }
 
-    // 2. Envoi d'email instantané via Web3Forms
+    // 2. Envoi d'email via Web3Forms (Format JSON Forcé)
     if (WEB3FORMS_KEY) {
       try {
         const mailRes = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json", // ⚡ Forcer Web3Forms à renvoyer du JSON
+          },
           body: JSON.stringify({
             access_key: WEB3FORMS_KEY,
             subject: `🔥 Nouveau prospect DSM Digital : ${name}`,
-            from_name: "Portfolio DSM Digital",
-            to_email: "digitalstoremarketing40@gmail.com",
-            Nom_Complet: name,
-            Email_Client: email,
-            Entreprise: company || "Non renseignée",
-            Service_Demande: service || "Non spécifié",
-            Message_Projet: message,
-            Source: source || "Direct",
+            from_name: "DSM Digital Portfolio",
+            name: name,
+            email: email,
+            message: `Nom complet : ${name}\nEmail : ${email}\nEntreprise : ${company || "Non renseignée"}\nService demandé : ${service || "Non spécifié"}\n\nProjet :\n${message}`,
           }),
         });
-        const mailData = await mailRes.json();
-        console.log("📧 Statut envoi Web3Forms :", mailData);
+
+        const resText = await mailRes.text();
+        try {
+          const mailData = JSON.parse(resText);
+          console.log("📧 Statut Web3Forms :", mailData);
+        } catch {
+          console.log("📧 Réponse Web3Forms (texte) :", resText);
+        }
       } catch (mailError) {
         console.error("Erreur envoi Email:", mailError);
       }
@@ -85,7 +90,9 @@ export async function POST(request: Request) {
                 event_name: "Lead",
                 event_time: Math.floor(Date.now() / 1000),
                 action_source: "website",
-                event_source_url: request.headers.get("referer") || "https://dsm-digital-portfolio.vercel.app",
+                event_source_url:
+                  request.headers.get("referer") ||
+                  "https://dsm-digital-portfolio.vercel.app",
                 user_data: {
                   em: [email.trim().toLowerCase()],
                   fn: [name.trim().toLowerCase()],
