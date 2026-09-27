@@ -1,15 +1,19 @@
-import { Syne, Plus_Jakarta_Sans } from 'next/font/google';
+import { Space_Grotesk, Inter } from "next/font/google";
 
-export const clashDisplay = Syne({
-  subsets: ['latin'],
-  variable: '--font-clash',
-  display: 'swap',
-  weight: ['500', '700', '800'],
+/**
+ * Typographies d'agence modernes servies via Next.js Google Fonts
+ * - Space_Grotesk : Titres & Display (--font-clash)
+ * - Inter : Corps de texte & UI (--font-satoshi)
+ */
+
+export const clashDisplay = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-clash",
+  display: "swap",
 });
 
-export const satoshi = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  variable: '--font-satoshi',
-  display: 'swap',
-  weight: ['400', '500', '600', '700'],
+export const satoshi = Inter({
+  subsets: ["latin"],
+  variable: "--font-satoshi",
+  display: "swap",
 });
