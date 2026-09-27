@@ -91,7 +91,7 @@ export const INDUSTRIES = [
   },
 ] as const;
 
-/* --- Section services (Adaptée Marché Francophone / Afrique) -------------- */
+/* --- Section services ---------------------------------------------------- */
 export type Service = {
   index: string;
   title: string;
@@ -262,6 +262,50 @@ export const STATS = [
   { value: 100, suffix: "%", label: "Clients satisfaits" },
   { value: 24, suffix: "/7", label: "Disponibilité" },
 ] as const;
+
+/* --- Section témoignages (Trust) ---------------------------------------- */
+export type Testimonial = {
+  quote: string;
+  author: string;
+  role: string;
+  company: string;
+  project?: string;
+};
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    quote:
+      "DSM Digital n'a pas seulement créé notre marketplace. En 3 mois, nos demandes de location ont plus que doublé. Leur suivi pub Meta a changé la donne.",
+    author: "Moussa Diop",
+    role: "Fondateur",
+    company: "Senauto",
+    project: "Senauto",
+  },
+  {
+    quote:
+      "On cherchait un outil simple pour gérer nos stocks. Jongo a transformé notre quotidien. L'équipe DSM a livré exactement ce qu'il nous fallait, dans les délais.",
+    author: "Aïcha Ndiaye",
+    role: "Directrice opérationnelle",
+    company: "Réseau de boutiques Dakar",
+    project: "Jongo",
+  },
+  {
+    quote:
+      "Site corporate premium, génération de devis dès le premier mois. DSM comprend le B2B et livre un niveau digne des grandes agences internationales.",
+    author: "Ibrahima Fall",
+    role: "Directeur commercial",
+    company: "Brescor Engineering Group",
+    project: "Brescor",
+  },
+  {
+    quote:
+      "De la maquette au lancement pub, tout a été fluide. On a passé les 10 000 utilisateurs plus vite que prévu. Je recommande les yeux fermés.",
+    author: "Kevin Manga",
+    role: "CEO",
+    company: "Lovelink237",
+    project: "Lovelink",
+  },
+];
 
 /* --- Textes Hero --------------------------------------------------------- */
 export const HERO = {
