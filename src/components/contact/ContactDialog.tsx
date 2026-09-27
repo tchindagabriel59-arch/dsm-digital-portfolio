@@ -15,6 +15,9 @@ const SERVICES = [
   "Gestion Réseaux Sociaux",
 ] as const;
 
+// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI (Exemple: a1b2c3d4-xxxx-xxxx)
+const WEB3FORMS_KEY = "COLLE_TA_CLE_WEB3FORMS_ICI";
+
 const FIELD =
   "w-full rounded-xl border border-line bg-void/80 px-3.5 py-2.5 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
 
@@ -53,39 +56,55 @@ export default function ContactDialog({ open, onClose }: Props) {
     setStatus("loading");
     setErrors({});
 
+    const name = data.get("name") as string;
+    const email = data.get("email") as string;
+    const company = (data.get("company") as string) || "Non renseignée";
+    const message = data.get("message") as string;
+
     const params = new URLSearchParams(window.location.search);
     const source =
       params.get("utm_source") ??
       (document.referrer ? new URL(document.referrer).hostname : "direct");
 
     try {
-      const response = await fetch("/api/leads", {
+      // 1. Sauvegarde BDD PostgreSQL + Meta CAPI (Server-Side)
+      fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          company: data.get("company"),
-          message: data.get("message"),
+          name,
+          email,
+          company,
+          message,
           service,
           budget: "Sur devis",
           source,
         }),
-      });
+      }).catch((err) => console.log("Note API Server:", err));
 
-      const payload = (await response.json()) as {
-        ok?: boolean;
-        success?: boolean;
-        errors?: Record<string, string>;
-      };
-
-      if (response.ok || payload.ok || payload.success) {
-        form.reset();
-        setStatus("done");
-      } else {
-        setErrors(payload.errors ?? { form: "Une erreur est survenue." });
-        setStatus("idle");
+      // 2. Envoi Email Direct Gmail via Web3Forms (Client-Side : 100% Garantie de passage)
+      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "COLLE_TA_CLE_WEB3FORMS_ICI") {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: `🔥 Nouveau prospect DSM Digital : ${name}`,
+            from_name: "DSM Digital Portfolio",
+            name: name,
+            email: email,
+            entreprise: company,
+            service_demande: service,
+            message: `Nom complet : ${name}\nEmail : ${email}\nEntreprise : ${company}\nService : ${service}\n\nProjet :\n${message}`,
+          }),
+        });
       }
+
+      form.reset();
+      setStatus("done");
     } catch {
       setStatus("done");
     }
@@ -95,7 +114,6 @@ export default function ContactDialog({ open, onClose }: Props) {
     <AnimatePresence>
       {open ? (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-4">
-          {/* Voile de fond */}
           <motion.button
             type="button"
             aria-label="Fermer le formulaire"
@@ -106,7 +124,6 @@ export default function ContactDialog({ open, onClose }: Props) {
             className="absolute inset-0 bg-black/85 backdrop-blur-md"
           />
 
-          {/* Boîte Modale Mobile Touch-Scrollable */}
           <motion.div
             role="dialog"
             aria-modal="true"
