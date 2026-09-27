@@ -1,21 +1,62 @@
 @import "tailwindcss";
 
+@theme {
+  --color-void: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-hover: #161616;
+  --color-accent: #0066ff;
+  --color-accent-soft: #3385ff;
+  --color-bone: #fafafa;
+  --color-ash: #a1a1a1;
+  --color-ash-dim: #666666;
+  --color-line: #1f1f1f;
+  --color-line-strong: #2e2e2e;
+
+  --font-display: var(--font-clash), sans-serif;
+  --font-sans: var(--font-satoshi), sans-serif;
+}
+
 @layer base {
   :root {
     --background: #0a0a0a;
     --foreground: #fafafa;
   }
+
+  body {
+    background-color: #0a0a0a;
+    color: #fafafa;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
 }
 
-/* ⚡ FOND ultra-léger et fluide (Suppression du grain SVG lourd) */
-body {
-  background-color: #0a0a0a;
-  color: #fafafa;
+/* 🎯 Le conteneur maître (.shell) qui empêche le site de s'élargir sur PC */
+.shell {
+  width: 100%;
+  max-width: 80rem; /* 1280px : Largeur idéale d'agence internationale */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
-/* Grille technique épurée sans surcharge processeur */
+@media (min-width: 640px) {
+  .shell {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Grille technique épurée */
 .grid-lines {
-  background-size: 50px 50px;
+  background-size: 60px 60px;
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
@@ -26,14 +67,7 @@ body {
   -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
 }
 
-/* Optimisation de défilement fluide */
-html {
-  scroll-behavior: smooth;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Styles pour le lien d'accessibilité */
+/* Skip link d'accessibilité */
 .skip-link {
   position: absolute;
   top: -100px;
