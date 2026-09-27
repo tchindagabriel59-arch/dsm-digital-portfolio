@@ -9,10 +9,10 @@ import { cn } from "@/lib/utils";
 type Props = { open: boolean; onClose: () => void };
 
 const SERVICES = [
-  "Développement web",
-  "Référencement SEO",
-  "Publicité digitale",
-  "Social media",
+  "Création de site internet",
+  "Référencement Google",
+  "Publicité sponsorisée",
+  "Gestion Réseaux Sociaux",
 ] as const;
 
 const FIELD =
