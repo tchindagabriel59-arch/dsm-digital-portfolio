@@ -15,17 +15,14 @@ const SERVICES = [
   "Social media",
 ] as const;
 
-const BUDGETS = ["< 1 500 €", "1 500 – 5 000 €", "5 000 – 15 000 €", "> 15 000 €"] as const;
-
 const FIELD =
   "w-full rounded-xl border border-line bg-void/70 px-4 py-3 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
 
-/** Formulaire de prise de contact — enregistre un lead en base PostgreSQL. */
+/** Formulaire de prise de contact — épuré et sans friction. */
 export default function ContactDialog({ open, onClose }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [service, setService] = useState<string>(SERVICES[0]);
-  const [budget, setBudget] = useState<string>(BUDGETS[1]);
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -74,7 +71,7 @@ export default function ContactDialog({ open, onClose }: Props) {
           company: data.get("company"),
           message: data.get("message"),
           service,
-          budget,
+          budget: "Sur devis",
           source,
         }),
       });
@@ -93,7 +90,6 @@ export default function ContactDialog({ open, onClose }: Props) {
         setStatus("idle");
       }
     } catch {
-      // Si la requête atteint le serveur et enregistre le lead dans Vercel, on valide l'écran
       setStatus("done");
     }
   }
@@ -186,7 +182,7 @@ export default function ContactDialog({ open, onClose }: Props) {
                       id="name"
                       name="name"
                       required
-                      placeholder="Awa Diallo"
+                      placeholder="Ex: Amad Diallo"
                       className={FIELD}
                     />
                     {errors.name ? (
@@ -207,7 +203,7 @@ export default function ContactDialog({ open, onClose }: Props) {
                       name="email"
                       type="email"
                       required
-                      placeholder="awa@entreprise.com"
+                      placeholder="nom@entreprise.com"
                       className={FIELD}
                     />
                     {errors.email ? (
@@ -223,7 +219,7 @@ export default function ContactDialog({ open, onClose }: Props) {
                     htmlFor="company"
                     className="mb-2 block font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase"
                   >
-                    Entreprise
+                    Entreprise / Marque
                   </label>
                   <input
                     id="company"
@@ -256,29 +252,6 @@ export default function ContactDialog({ open, onClose }: Props) {
                   </div>
                 </fieldset>
 
-                <fieldset className="mt-6">
-                  <legend className="mb-3 font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase">
-                    Budget estimé
-                  </legend>
-                  <div className="flex flex-wrap gap-2">
-                    {BUDGETS.map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => setBudget(item)}
-                        className={cn(
-                          "rounded-full border px-4 py-2 text-xs transition-all duration-300",
-                          budget === item
-                            ? "border-accent bg-accent/10 text-bone"
-                            : "border-line text-ash hover:border-line-strong hover:text-bone",
-                        )}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </fieldset>
-
                 <div className="mt-6">
                   <label
                     htmlFor="message"
@@ -291,7 +264,7 @@ export default function ContactDialog({ open, onClose }: Props) {
                     name="message"
                     required
                     rows={4}
-                    placeholder="Contexte, objectifs, échéance…"
+                    placeholder="Contexte, objectifs, ce que vous souhaitez réaliser..."
                     className={cn(FIELD, "resize-none")}
                   />
                   {errors.message ? (
