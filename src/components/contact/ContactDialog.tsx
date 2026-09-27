@@ -16,9 +16,8 @@ const SERVICES = [
 ] as const;
 
 const FIELD =
-  "w-full rounded-xl border border-line bg-void/70 px-4 py-3 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
+  "w-full rounded-xl border border-line bg-void/80 px-3.5 py-2.5 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
 
-/** Formulaire de prise de contact — épuré et sans friction. */
 export default function ContactDialog({ open, onClose }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -31,20 +30,19 @@ export default function ContactDialog({ open, onClose }: Props) {
       if (event.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
-    const timer = window.setTimeout(() => firstFieldRef.current?.focus(), 420);
+    const timer = window.setTimeout(() => firstFieldRef.current?.focus(), 300);
     return () => {
       window.removeEventListener("keydown", onKey);
       window.clearTimeout(timer);
     };
   }, [open, onClose]);
 
-  // Réinitialisation différée à la fermeture
   useEffect(() => {
     if (open) return;
     const timer = window.setTimeout(() => {
       setStatus("idle");
       setErrors({});
-    }, 500);
+    }, 400);
     return () => window.clearTimeout(timer);
   }, [open]);
 
@@ -55,7 +53,6 @@ export default function ContactDialog({ open, onClose }: Props) {
     setStatus("loading");
     setErrors({});
 
-    // On capture la source de trafic pour le suivi des campagnes payantes
     const params = new URLSearchParams(window.location.search);
     const source =
       params.get("utm_source") ??
@@ -97,8 +94,8 @@ export default function ContactDialog({ open, onClose }: Props) {
   return (
     <AnimatePresence>
       {open ? (
-        <div className="fixed inset-0 z-[150] flex items-end justify-center md:items-center">
-          {/* Voile */}
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-4">
+          {/* Voile de fond */}
           <motion.button
             type="button"
             aria-label="Fermer le formulaire"
@@ -106,74 +103,73 @@ export default function ContactDialog({ open, onClose }: Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-black/85 backdrop-blur-md"
           />
 
+          {/* Boîte Modale Mobile Touch-Scrollable */}
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="Démarrer un projet"
-            initial={{ y: 60, opacity: 0, scale: 0.98 }}
+            initial={{ y: 40, opacity: 0, scale: 0.96 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 40, opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="relative max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-3xl border border-line bg-surface/95 p-6 shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)] md:rounded-3xl md:p-10"
+            exit={{ y: 30, opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 max-h-[88vh] w-full max-w-xl overflow-y-auto overscroll-contain rounded-2xl border border-line bg-[#111111] p-5 sm:p-8 text-bone shadow-2xl touch-pan-y"
           >
-            <div className="pointer-events-none absolute -top-24 -right-16 h-56 w-56 rounded-full bg-accent/20 blur-3xl" />
-
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-5 right-5 rounded-full border border-line p-2 text-ash transition-colors hover:border-bone/30 hover:text-bone"
+              className="absolute top-4 right-4 z-20 rounded-full border border-line bg-void/80 p-2 text-ash transition-colors hover:border-bone/30 hover:text-bone"
               aria-label="Fermer"
             >
               <X className="h-4 w-4" />
             </button>
 
             {status === "done" ? (
-              <div className="flex min-h-[380px] flex-col items-center justify-center text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
+              <div className="flex min-h-[280px] flex-col items-center justify-center text-center py-6">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
                   <Check className="h-7 w-7 text-accent" />
                 </div>
-                <h3 className="display mt-7 text-3xl text-bone">
-                  Demande envoyée.
+                <h3 className="display mt-5 text-2xl font-bold text-bone">
+                  Demande envoyée !
                 </h3>
-                <p className="mt-3 max-w-sm text-sm leading-relaxed text-ash">
-                  Merci. Nous revenons vers vous sous 24 h ouvrées avec une
-                  première lecture de votre projet.
+                <p className="mt-2.5 max-w-sm text-xs sm:text-sm leading-relaxed text-ash">
+                  Merci. Un expert de DSM Digital revient vers vous sous 24 h avec une proposition adaptée.
                 </p>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="mt-8 text-sm text-accent underline-offset-4 hover:underline"
+                  className="mt-6 rounded-full bg-accent px-6 py-2.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
                 >
                   Retour au site
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="relative">
-                <p className="font-mono text-[10px] tracking-[0.22em] text-accent uppercase">
-                  Nouveau projet
-                </p>
-                <h3 className="display mt-3 text-3xl text-bone md:text-4xl">
-                  Parlons de votre projet.
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ash">
-                  Réponse sous 24 h ouvrées. Ou écrivez-nous directement à{" "}
-                  <a
-                    href={`mailto:${SITE.email}`}
-                    className="text-bone underline decoration-line underline-offset-4 transition-colors hover:decoration-accent"
-                  >
-                    {SITE.email}
-                  </a>
-                  .
-                </p>
+              <form onSubmit={handleSubmit} className="relative space-y-4 sm:space-y-5">
+                <div>
+                  <p className="font-mono text-[9px] tracking-[0.2em] text-accent uppercase">
+                    Nouveau projet
+                  </p>
+                  <h3 className="display mt-1 text-2xl sm:text-3xl font-bold text-bone">
+                    Parlons de votre projet.
+                  </h3>
+                  <p className="mt-1 text-xs text-ash">
+                    Réponse sous 24 h. Ou par email à{" "}
+                    <a
+                      href={`mailto:${SITE.email}`}
+                      className="text-bone underline underline-offset-2"
+                    >
+                      {SITE.email}
+                    </a>
+                  </p>
+                </div>
 
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <div>
                     <label
                       htmlFor="name"
-                      className="mb-2 block font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase"
+                      className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
                     >
                       Nom complet *
                     </label>
@@ -185,16 +181,11 @@ export default function ContactDialog({ open, onClose }: Props) {
                       placeholder="Ex: Amad Diallo"
                       className={FIELD}
                     />
-                    {errors.name ? (
-                      <p className="mt-1.5 text-xs text-red-400">
-                        {errors.name}
-                      </p>
-                    ) : null}
                   </div>
                   <div>
                     <label
                       htmlFor="email"
-                      className="mb-2 block font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase"
+                      className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
                     >
                       Email *
                     </label>
@@ -206,18 +197,13 @@ export default function ContactDialog({ open, onClose }: Props) {
                       placeholder="nom@entreprise.com"
                       className={FIELD}
                     />
-                    {errors.email ? (
-                      <p className="mt-1.5 text-xs text-red-400">
-                        {errors.email}
-                      </p>
-                    ) : null}
                   </div>
                 </div>
 
-                <div className="mt-4">
+                <div>
                   <label
                     htmlFor="company"
-                    className="mb-2 block font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase"
+                    className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
                   >
                     Entreprise / Marque
                   </label>
@@ -229,33 +215,33 @@ export default function ContactDialog({ open, onClose }: Props) {
                   />
                 </div>
 
-                <fieldset className="mt-6">
-                  <legend className="mb-3 font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase">
+                <div>
+                  <legend className="mb-2 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase">
                     Besoin principal
                   </legend>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {SERVICES.map((item) => (
                       <button
                         key={item}
                         type="button"
                         onClick={() => setService(item)}
                         className={cn(
-                          "rounded-full border px-4 py-2 text-xs transition-all duration-300",
+                          "rounded-full border px-3 py-1.5 text-[11px] transition-all",
                           service === item
-                            ? "border-accent bg-accent/10 text-bone"
-                            : "border-line text-ash hover:border-line-strong hover:text-bone",
+                            ? "border-accent bg-accent/20 text-bone font-medium"
+                            : "border-line text-ash hover:border-line-strong",
                         )}
                       >
                         {item}
                       </button>
                     ))}
                   </div>
-                </fieldset>
+                </div>
 
-                <div className="mt-6">
+                <div>
                   <label
                     htmlFor="message"
-                    className="mb-2 block font-mono text-[10px] tracking-[0.18em] text-ash-dim uppercase"
+                    className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
                   >
                     Votre projet *
                   </label>
@@ -263,31 +249,26 @@ export default function ContactDialog({ open, onClose }: Props) {
                     id="message"
                     name="message"
                     required
-                    rows={4}
-                    placeholder="Contexte, objectifs, ce que vous souhaitez réaliser..."
+                    rows={3}
+                    placeholder="Décrivez brièvement ce que vous souhaitez réaliser..."
                     className={cn(FIELD, "resize-none")}
                   />
-                  {errors.message ? (
-                    <p className="mt-1.5 text-xs text-red-400">
-                      {errors.message}
-                    </p>
-                  ) : null}
                 </div>
 
                 {errors.form ? (
-                  <p className="mt-4 text-xs text-red-400">{errors.form}</p>
+                  <p className="text-xs text-red-400">{errors.form}</p>
                 ) : null}
 
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="group mt-8 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-accent px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:bg-accent-soft hover:shadow-[0_12px_40px_-10px_rgba(0,102,255,0.8)] disabled:opacity-60 sm:w-auto"
+                  className="group mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-medium text-white transition-all active:scale-95 disabled:opacity-60"
                 >
                   {status === "loading" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : null}
-                  Envoyer la demande
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  <span>Envoyer la demande</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </form>
             )}
