@@ -7,8 +7,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, company, service, budget, message, source } = body;
 
-    // 🔑 Coller ta vraie clé Web3Forms ici
-    const WEB3FORMS_KEY = "TON_ACCESS_KEY_ICI"; 
+    // 🔑 Clé lue depuis les variables Vercel
+    const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY;
 
     console.log("🔥 NOUVEAU PROSPECT REÇU SUR DSM DIGITAL 🔥", {
       nom: name,
@@ -41,8 +41,8 @@ export async function POST(request: Request) {
       console.error("Note BDD:", dbError);
     }
 
-    // 2. Envoi d'email via Web3Forms avec Log de contrôle
-    if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "TON_ACCESS_KEY_ICI") {
+    // 2. Envoi d'email instantané via Web3Forms
+    if (WEB3FORMS_KEY) {
       try {
         const mailRes = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
@@ -66,10 +66,10 @@ export async function POST(request: Request) {
         console.error("Erreur envoi Email:", mailError);
       }
     } else {
-      console.log("⚠️ Clé Web3Forms non configurée dans route.ts !");
+      console.log("⚠️ Variable WEB3FORMS_KEY absente dans Vercel.");
     }
 
-    // 3. Meta CAPI
+    // 3. Signalement Meta CAPI
     const pixelId = process.env.META_PIXEL_ID || "2974733949534772";
     const token = process.env.META_CAPI_TOKEN;
 
