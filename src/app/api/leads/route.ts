@@ -7,9 +7,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, company, service, budget, message, source } = body;
 
-    // 🔑 Clé lue depuis la variable d'environnement Vercel
-    const WEB3FORMS_KEY = process.env.WEB3FORMS_KEY;
-
     console.log("🔥 NOUVEAU PROSPECT REÇU SUR DSM DIGITAL 🔥", {
       nom: name,
       email: email,
@@ -41,40 +38,7 @@ export async function POST(request: Request) {
       console.error("Note BDD:", dbError);
     }
 
-    // 2. Envoi d'email via Web3Forms (Format JSON Forcé)
-    if (WEB3FORMS_KEY) {
-      try {
-        const mailRes = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json", // ⚡ Forcer Web3Forms à renvoyer du JSON
-          },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_KEY,
-            subject: `🔥 Nouveau prospect DSM Digital : ${name}`,
-            from_name: "DSM Digital Portfolio",
-            name: name,
-            email: email,
-            message: `Nom complet : ${name}\nEmail : ${email}\nEntreprise : ${company || "Non renseignée"}\nService demandé : ${service || "Non spécifié"}\n\nProjet :\n${message}`,
-          }),
-        });
-
-        const resText = await mailRes.text();
-        try {
-          const mailData = JSON.parse(resText);
-          console.log("📧 Statut Web3Forms :", mailData);
-        } catch {
-          console.log("📧 Réponse Web3Forms (texte) :", resText);
-        }
-      } catch (mailError) {
-        console.error("Erreur envoi Email:", mailError);
-      }
-    } else {
-      console.log("⚠️ Variable WEB3FORMS_KEY absente dans Vercel.");
-    }
-
-    // 3. Signalement Meta CAPI
+    // 2. Signalement Meta CAPI
     const pixelId = process.env.META_PIXEL_ID || "2974733949534772";
     const token = process.env.META_CAPI_TOKEN;
 
