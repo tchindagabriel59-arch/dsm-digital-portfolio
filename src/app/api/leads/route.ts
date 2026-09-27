@@ -7,10 +7,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, company, service, budget, message, source } = body;
 
-    // 🔑 Mettre ta clé Web3Forms ici
-    const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062"; 
+    // 🔑 Coller ta vraie clé Web3Forms ici
+    const WEB3FORMS_KEY = "TON_ACCESS_KEY_ICI"; 
 
-    // 1. Log d'alerte Vercel
     console.log("🔥 NOUVEAU PROSPECT REÇU SUR DSM DIGITAL 🔥", {
       nom: name,
       email: email,
@@ -27,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Sauvegarde dans la base de données PostgreSQL
+    // 1. Sauvegarde dans BDD PostgreSQL
     try {
       await db.insert(leads).values({
         name,
@@ -42,10 +41,10 @@ export async function POST(request: Request) {
       console.error("Note BDD:", dbError);
     }
 
-    // 3. ENVOI INSTANTANÉ D'EMAIL vers digitalstoremarketing40@gmail.com
-    if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
+    // 2. Envoi d'email via Web3Forms avec Log de contrôle
+    if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "TON_ACCESS_KEY_ICI") {
       try {
-        await fetch("https://api.web3forms.com/submit", {
+        const mailRes = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -61,12 +60,16 @@ export async function POST(request: Request) {
             Source: source || "Direct",
           }),
         });
+        const mailData = await mailRes.json();
+        console.log("📧 Statut envoi Web3Forms :", mailData);
       } catch (mailError) {
         console.error("Erreur envoi Email:", mailError);
       }
+    } else {
+      console.log("⚠️ Clé Web3Forms non configurée dans route.ts !");
     }
 
-    // 4. Signalement à Meta CAPI
+    // 3. Meta CAPI
     const pixelId = process.env.META_PIXEL_ID || "2974733949534772";
     const token = process.env.META_CAPI_TOKEN;
 
