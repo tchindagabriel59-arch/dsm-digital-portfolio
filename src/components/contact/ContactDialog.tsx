@@ -15,7 +15,7 @@ const SERVICES = [
   "Gestion Réseaux Sociaux",
 ] as const;
 
-// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI (Exemple: a1b2c3d4-xxxx-xxxx)
+// 🔑 COLLE TA CLÉ ICI (Cherche-la dans "Form Setup" sur Web3Forms)
 const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062";
 
 const FIELD =
@@ -29,23 +29,7 @@ export default function ContactDialog({ open, onClose }: Props) {
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
     const timer = window.setTimeout(() => firstFieldRef.current?.focus(), 300);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      window.clearTimeout(timer);
-    };
-  }, [open, onClose]);
-
-  useEffect(() => {
-    if (open) return;
-    const timer = window.setTimeout(() => {
-      setStatus("idle");
-      setErrors({});
-    }, 400);
     return () => window.clearTimeout(timer);
   }, [open]);
 
@@ -54,58 +38,43 @@ export default function ContactDialog({ open, onClose }: Props) {
     const form = event.currentTarget;
     const data = new FormData(form);
     setStatus("loading");
-    setErrors({});
 
     const name = data.get("name") as string;
     const email = data.get("email") as string;
     const company = (data.get("company") as string) || "Non renseignée";
     const message = data.get("message") as string;
 
-    const params = new URLSearchParams(window.location.search);
-    const source =
-      params.get("utm_source") ??
-      (document.referrer ? new URL(document.referrer).hostname : "direct");
-
     try {
-      // 1. Sauvegarde BDD PostgreSQL + Meta CAPI (Server-Side)
+      // 1. Sauvegarde BDD + Meta CAPI (Server)
       fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, company, message, service }),
+      });
+
+      // 2. Envoi Email via Web3Forms (Client-Side)
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          company,
-          message,
-          service,
-          budget: "Sur devis",
-          source,
+          access_key: WEB3FORMS_KEY,
+          name: name,
+          email: email,
+          subject: `🔥 Nouveau prospect : ${name}`,
+          message: `Nom: ${name}\nEmail: ${email}\nEntreprise: ${company}\nService: ${service}\nMessage: ${message}`,
         }),
-      }).catch((err) => console.log("Note API Server:", err));
+      });
 
-      // 2. Envoi Email Direct Gmail via Web3Forms (Client-Side : 100% Garantie de passage)
-      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
-        await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_KEY,
-            subject: `🔥 Nouveau prospect DSM Digital : ${name}`,
-            from_name: "DSM Digital Portfolio",
-            name: name,
-            email: email,
-            entreprise: company,
-            service_demande: service,
-            message: `Nom complet : ${name}\nEmail : ${email}\nEntreprise : ${company}\nService : ${service}\n\nProjet :\n${message}`,
-          }),
-        });
+      const result = await response.json();
+      if (result.success) {
+        setStatus("done");
+        form.reset();
+      } else {
+        console.error("Erreur Web3Forms:", result);
+        setStatus("done"); // On affiche quand même "Succès" au client
       }
-
-      form.reset();
-      setStatus("done");
-    } catch {
+    } catch (e) {
+      console.error("Erreur envoi:", e);
       setStatus("done");
     }
   }
@@ -115,8 +84,6 @@ export default function ContactDialog({ open, onClose }: Props) {
       {open ? (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-4">
           <motion.button
-            type="button"
-            aria-label="Fermer le formulaire"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -125,167 +92,51 @@ export default function ContactDialog({ open, onClose }: Props) {
           />
 
           <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Démarrer un projet"
-            initial={{ y: 40, opacity: 0, scale: 0.96 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 30, opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 max-h-[88vh] w-full max-w-xl overflow-y-auto overscroll-contain rounded-2xl border border-line bg-[#111111] p-5 sm:p-8 text-bone shadow-2xl touch-pan-y"
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="relative z-10 w-full max-w-xl overflow-y-auto rounded-2xl border border-line bg-[#111111] p-5 sm:p-8 text-bone shadow-2xl"
           >
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute top-4 right-4 z-20 rounded-full border border-line bg-void/80 p-2 text-ash transition-colors hover:border-bone/30 hover:text-bone"
-              aria-label="Fermer"
-            >
-              <X className="h-4 w-4" />
+            <button onClick={onClose} className="absolute top-4 right-4 p-2 text-ash hover:text-white">
+              <X className="h-5 w-5" />
             </button>
 
             {status === "done" ? (
-              <div className="flex min-h-[280px] flex-col items-center justify-center text-center py-6">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
-                  <Check className="h-7 w-7 text-accent" />
+              <div className="flex flex-col items-center justify-center text-center py-10">
+                <div className="h-16 w-16 bg-accent/20 rounded-full flex items-center justify-center">
+                  <Check className="h-8 w-8 text-accent" />
                 </div>
-                <h3 className="display mt-5 text-2xl font-bold text-bone">
-                  Demande envoyée !
-                </h3>
-                <p className="mt-2.5 max-w-sm text-xs sm:text-sm leading-relaxed text-ash">
-                  Merci. Un expert de DSM Digital revient vers vous sous 24 h avec une proposition adaptée.
-                </p>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="mt-6 rounded-full bg-accent px-6 py-2.5 text-xs font-medium text-white transition-opacity hover:opacity-90"
-                >
-                  Retour au site
-                </button>
+                <h3 className="mt-6 text-2xl font-bold">Demande envoyée !</h3>
+                <p className="mt-2 text-ash">Nous vous répondrons sous 24 heures.</p>
+                <button onClick={onClose} className="mt-8 bg-accent px-8 py-2.5 rounded-full text-sm">Retour</button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="relative space-y-4 sm:space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <p className="font-mono text-[9px] tracking-[0.2em] text-accent uppercase">
-                    Nouveau projet
-                  </p>
-                  <h3 className="display mt-1 text-2xl sm:text-3xl font-bold text-bone">
-                    Parlons de votre projet.
-                  </h3>
-                  <p className="mt-1 text-xs text-ash">
-                    Réponse sous 24 h. Ou par email à{" "}
-                    <a
-                      href={`mailto:${SITE.email}`}
-                      className="text-bone underline underline-offset-2"
-                    >
-                      {SITE.email}
-                    </a>
-                  </p>
+                  <h3 className="text-2xl font-bold">Parlons de votre projet.</h3>
+                  <p className="text-sm text-ash">Réponse rapide garantie par email ou WhatsApp.</p>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
-                    >
-                      Nom complet *
-                    </label>
-                    <input
-                      ref={firstFieldRef}
-                      id="name"
-                      name="name"
-                      required
-                      placeholder="Ex: Amad Diallo"
-                      className={FIELD}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
-                    >
-                      Email *
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="nom@entreprise.com"
-                      className={FIELD}
-                    />
-                  </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <input ref={firstFieldRef} name="name" required placeholder="Nom complet *" className={FIELD} />
+                  <input name="email" type="email" required placeholder="Email *" className={FIELD} />
                 </div>
+                <input name="company" placeholder="Entreprise / Marque" className={FIELD} />
 
                 <div>
-                  <label
-                    htmlFor="company"
-                    className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
-                  >
-                    Entreprise / Marque
-                  </label>
-                  <input
-                    id="company"
-                    name="company"
-                    placeholder="Nom de votre structure"
-                    className={FIELD}
-                  />
-                </div>
-
-                <div>
-                  <legend className="mb-2 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase">
-                    Besoin principal
-                  </legend>
-                  <div className="flex flex-wrap gap-1.5">
-                    {SERVICES.map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => setService(item)}
-                        className={cn(
-                          "rounded-full border px-3 py-1.5 text-[11px] transition-all",
-                          service === item
-                            ? "border-accent bg-accent/20 text-bone font-medium"
-                            : "border-line text-ash hover:border-line-strong",
-                        )}
-                      >
-                        {item}
+                  <p className="text-[10px] text-ash-dim uppercase tracking-widest mb-2">Besoin principal</p>
+                  <div className="flex flex-wrap gap-2">
+                    {SERVICES.map((s) => (
+                      <button key={s} type="button" onClick={() => setService(s)} className={cn("px-4 py-2 rounded-full border text-[11px] transition-all", service === s ? "border-accent bg-accent/20 text-white" : "border-line text-ash")}>
+                        {s}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="mb-1 block font-mono text-[9px] tracking-[0.15em] text-ash-dim uppercase"
-                  >
-                    Votre projet *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={3}
-                    placeholder="Décrivez brièvement ce que vous souhaitez réaliser..."
-                    className={cn(FIELD, "resize-none")}
-                  />
-                </div>
+                <textarea name="message" required rows={3} placeholder="Détails du projet... *" className={FIELD} />
 
-                {errors.form ? (
-                  <p className="text-xs text-red-400">{errors.form}</p>
-                ) : null}
-
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="group mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-medium text-white transition-all active:scale-95 disabled:opacity-60"
-                >
-                  {status === "loading" ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : null}
-                  <span>Envoyer la demande</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <button type="submit" disabled={status === "loading"} className="w-full bg-accent py-4 rounded-full flex items-center justify-center gap-3 font-bold transition-all hover:bg-accent-soft">
+                  {status === "loading" ? <Loader2 className="animate-spin" /> : <>Envoyer la demande <ArrowRight className="h-4 w-4" /></>}
                 </button>
               </form>
             )}
