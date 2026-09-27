@@ -16,7 +16,7 @@ const SERVICES = [
 ] as const;
 
 // 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI (Exemple: a1b2c3d4-xxxx-xxxx)
-const WEB3FORMS_KEY = "COLLE_TA_CLE_WEB3FORMS_ICI";
+const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062";
 
 const FIELD =
   "w-full rounded-xl border border-line bg-void/80 px-3.5 py-2.5 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
@@ -83,7 +83,7 @@ export default function ContactDialog({ open, onClose }: Props) {
       }).catch((err) => console.log("Note API Server:", err));
 
       // 2. Envoi Email Direct Gmail via Web3Forms (Client-Side : 100% Garantie de passage)
-      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "COLLE_TA_CLE_WEB3FORMS_ICI") {
+      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
         await fetch("https://api.web3forms.com/submit", {
           method: "POST",
           headers: {
