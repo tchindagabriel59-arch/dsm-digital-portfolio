@@ -1,22 +1,25 @@
 import { NextResponse } from "next/server";
+import { db } from "@/db";
+import { leads } from "@/db/schema";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, email, company, service, budget, message, source } = body;
 
-    // 1. Log d'alerte instantané dans Vercel Logs (Garanti à 100%)
+    // 🔑 Mettre ta clé Web3Forms ici
+    const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062"; 
+
+    // 1. Log d'alerte Vercel
     console.log("🔥 NOUVEAU PROSPECT REÇU SUR DSM DIGITAL 🔥", {
       nom: name,
       email: email,
       entreprise: company || "Non renseignée",
-      service: service || "Développement web",
-      budget: budget || "Non spécifié",
+      service: service || "Non spécifié",
       message: message,
       date: new Date().toLocaleString("fr-FR"),
     });
 
-    // 2. Validation
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Veuillez remplir les champs obligatoires." },
@@ -24,7 +27,46 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Envoi asynchrone à Meta Ads CAPI (Pixel)
+    // 2. Sauvegarde dans la base de données PostgreSQL
+    try {
+      await db.insert(leads).values({
+        name,
+        email,
+        company: company || null,
+        service: service || "Non spécifié",
+        budget: budget || "Sur devis",
+        message,
+        source: source || "Direct",
+      });
+    } catch (dbError) {
+      console.error("Note BDD:", dbError);
+    }
+
+    // 3. ENVOI INSTANTANÉ D'EMAIL vers digitalstoremarketing40@gmail.com
+    if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "TON_ACCESS_KEY_ICI") {
+      try {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: `🔥 Nouveau prospect DSM Digital : ${name}`,
+            from_name: "Portfolio DSM Digital",
+            to_email: "digitalstoremarketing40@gmail.com",
+            Nom_Complet: name,
+            Email_Client: email,
+            Entreprise: company || "Non renseignée",
+            Service_Demande: service || "Non spécifié",
+            Message_Projet: message,
+            Source: source || "Direct",
+          }),
+        });
+      } catch (mailError) {
+        console.error("Erreur envoi Email:", mailError);
+      }
+    }
+
+    // 4. Signalement à Meta CAPI
     const pixelId = process.env.META_PIXEL_ID || "2974733949534772";
     const token = process.env.META_CAPI_TOKEN;
 
@@ -40,16 +82,10 @@ export async function POST(request: Request) {
                 event_name: "Lead",
                 event_time: Math.floor(Date.now() / 1000),
                 action_source: "website",
-                event_source_url:
-                  request.headers.get("referer") ||
-                  "https://dsm-digital-portfolio.vercel.app",
+                event_source_url: request.headers.get("referer") || "https://dsm-digital-portfolio.vercel.app",
                 user_data: {
                   em: [email.trim().toLowerCase()],
                   fn: [name.trim().toLowerCase()],
-                },
-                custom_data: {
-                  service_requested: service,
-                  budget_range: budget,
                 },
               },
             ],
@@ -58,15 +94,14 @@ export async function POST(request: Request) {
       ).catch((err) => console.log("Note Meta CAPI:", err));
     }
 
-    // 4. Réponse de succès garantie au navigateur
     return NextResponse.json(
-      { success: true, ok: true, message: "Demande reçue avec succès !" },
+      { success: true, message: "Demande reçue avec succès !" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Note serveur:", error);
+    console.error("Erreur générale:", error);
     return NextResponse.json(
-      { success: true, ok: true, message: "Demande reçue !" },
+      { success: true, message: "Demande reçue !" },
       { status: 200 }
     );
   }
