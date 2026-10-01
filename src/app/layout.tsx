@@ -11,45 +11,49 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
-const TITLE =
-  "DSM Digital — Agence de création web, SEO et publicité digitale";
-const DESCRIPTION =
-  "DSM Digital conçoit des sites web performants et pilote vos campagnes Meta, TikTok et Google Ads. Boostez votre présence en ligne avec une agence orientée résultats.";
+const TITLE = "DSM Digital — Agence de Création Web, SEO & Publicité";
+const DESCRIPTION = "Création de sites internet professionnels, référencement Google et publicités sponsorisées (Meta, TikTok, Google). Développez votre activité avec des résultats sous 30 jours.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
-  title: { default: TITLE, template: "%s — DSM Digital" },
+  metadataBase: new URL("https://dsm-digital-portfolio.vercel.app"),
+  title: TITLE,
   description: DESCRIPTION,
-  applicationName: SITE.name,
-  authors: [{ name: SITE.name, url: SITE.url }],
-  creator: SITE.name,
-  publisher: SITE.name,
+  applicationName: "DSM Digital",
+  authors: [{ name: "DSM Digital" }],
   keywords: [
-    "agence digitale",
-    "création site web",
-    "développement web",
-    "référencement SEO",
-    "Meta Ads",
+    "création site internet",
+    "agence web Dakar",
+    "publicité Facebook",
     "TikTok Ads",
     "Google Ads",
-    "social media management",
-    "agence web Dakar",
-    "acquisition payante",
+    "référencement SEO",
   ],
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: SITE.url,
-    siteName: SITE.name,
+    url: "https://dsm-digital-portfolio.vercel.app",
+    siteName: "DSM Digital",
     title: TITLE,
     description: DESCRIPTION,
+    images: [
+      {
+        url: "/images/sectors/corporate.webp",
+        width: 1200,
+        height: 630,
+        alt: "DSM Digital — Agence Digitale & Création Web",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/images/sectors/corporate.webp"],
   },
   robots: {
     index: true,
     follow: true,
   },
-  category: "technology",
 };
 
 export const viewport: Viewport = {
@@ -58,9 +62,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  // ⚠️ REMPLACE CE NUMÉRO par ton vrai numéro WhatsApp (format international sans + ni espaces)
-  // Exemple Sénégal : 221771234567 | Cameroun : 2376XXXXXXXX
-  const WHATSAPP_NUMBER = "237651387914";
+  const WHATSAPP_NUMBER = "221787533629";
   const WHATSAPP_MESSAGE = encodeURIComponent(
     "Bonjour DSM Digital 👋\nJ'ai vu votre portfolio et je souhaite obtenir un devis pour mon projet."
   );
@@ -106,9 +108,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </ContactProvider>
         </LoadingProvider>
 
-        {/* ═══════════════════════════════════════════
-            BOUTON WHATSAPP FLOTTANT — Conversion N°1
-            ═══════════════════════════════════════════ */}
+        {/* BOUTON WHATSAPP FLOTTANT */}
         <a
           href={whatsappUrl}
           target="_blank"
@@ -116,17 +116,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           aria-label="Discuter sur WhatsApp"
           className="group fixed bottom-6 right-6 z-[200] flex items-center gap-3"
         >
-          {/* Bulle de texte (apparaît au survol sur desktop) */}
           <span className="pointer-events-none hidden md:block opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300 bg-[#111111] border border-[#1F1F1F] text-white text-sm font-medium px-4 py-2.5 rounded-full shadow-xl whitespace-nowrap">
             Une question ? Écrivez-nous
           </span>
 
-          {/* Bouton principal */}
           <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_30px_rgba(37,211,102,0.45)] transition-transform duration-300 group-hover:scale-110 group-active:scale-95">
-            {/* Pulsation animée */}
             <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30" />
-
-            {/* Icône WhatsApp SVG officielle */}
             <svg
               viewBox="0 0 24 24"
               fill="currentColor"
