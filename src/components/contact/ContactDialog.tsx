@@ -15,7 +15,7 @@ const SERVICES = [
   "Gestion Réseaux Sociaux",
 ] as const;
 
-// 🔑 COLLE TA CLÉ ICI (Cherche-la dans "Form Setup" sur Web3Forms)
+// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI
 const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062";
 
 const FIELD =
@@ -41,40 +41,51 @@ export default function ContactDialog({ open, onClose }: Props) {
 
     const name = data.get("name") as string;
     const email = data.get("email") as string;
+    const phone = data.get("phone") as string;
     const company = (data.get("company") as string) || "Non renseignée";
     const message = data.get("message") as string;
 
     try {
-      // 1. Sauvegarde BDD + Meta CAPI (Server)
+      // 1. Sauvegarde BDD PostgreSQL + Meta CAPI (Server-Side)
       fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, company, message, service }),
-      });
-
-      // 2. Envoi Email via Web3Forms (Client-Side)
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          name: name,
-          email: email,
-          subject: `🔥 Nouveau prospect : ${name}`,
-          message: `Nom: ${name}\nEmail: ${email}\nEntreprise: ${company}\nService: ${service}\nMessage: ${message}`,
+          name,
+          email,
+          phone,
+          company,
+          message,
+          service,
+          budget: "Sur devis",
         }),
-      });
+      }).catch((err) => console.log("Note API Server:", err));
 
-      const result = await response.json();
-      if (result.success) {
-        setStatus("done");
-        form.reset();
-      } else {
-        console.error("Erreur Web3Forms:", result);
-        setStatus("done"); // On affiche quand même "Succès" au client
+      // 2. Envoi Email Direct Gmail via Web3Forms avec Numéro WhatsApp
+      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: `🔥 Nouveau prospect DSM Digital : ${name}`,
+            from_name: "DSM Digital Portfolio",
+            name: name,
+            email: email,
+            whatsapp: phone,
+            entreprise: company,
+            service_demande: service,
+            message: `Nom complet : ${name}\nEmail : ${email}\nTéléphone / WhatsApp : ${phone}\nEntreprise : ${company}\nService : ${service}\n\nProjet :\n${message}`,
+          }),
+        });
       }
-    } catch (e) {
-      console.error("Erreur envoi:", e);
+
+      form.reset();
+      setStatus("done");
+    } catch {
       setStatus("done");
     }
   }
@@ -94,9 +105,12 @@ export default function ContactDialog({ open, onClose }: Props) {
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="relative z-10 w-full max-w-xl overflow-y-auto rounded-2xl border border-line bg-[#111111] p-5 sm:p-8 text-bone shadow-2xl"
+            className="relative z-10 w-full max-w-xl overflow-y-auto max-h-[90vh] rounded-2xl border border-line bg-[#111111] p-5 sm:p-8 text-bone shadow-2xl touch-pan-y"
           >
-            <button onClick={onClose} className="absolute top-4 right-4 p-2 text-ash hover:text-white">
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 text-ash hover:text-white"
+            >
               <X className="h-5 w-5" />
             </button>
 
@@ -106,37 +120,126 @@ export default function ContactDialog({ open, onClose }: Props) {
                   <Check className="h-8 w-8 text-accent" />
                 </div>
                 <h3 className="mt-6 text-2xl font-bold">Demande envoyée !</h3>
-                <p className="mt-2 text-ash">Nous vous répondrons sous 24 heures.</p>
-                <button onClick={onClose} className="mt-8 bg-accent px-8 py-2.5 rounded-full text-sm">Retour</button>
+                <p className="mt-2 text-ash">
+                  Merci. Un expert de DSM Digital vous recontactera sous 24h par email ou WhatsApp.
+                </p>
+                <button
+                  onClick={onClose}
+                  className="mt-8 bg-accent px-8 py-2.5 rounded-full text-sm font-medium text-white"
+                >
+                  Retour au site
+                </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <h3 className="text-2xl font-bold">Parlons de votre projet.</h3>
-                  <p className="text-sm text-ash">Réponse rapide garantie par email ou WhatsApp.</p>
+                  <p className="text-xs text-ash mt-1">
+                    Réponse rapide garantie par email ou WhatsApp.
+                  </p>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <input ref={firstFieldRef} name="name" required placeholder="Nom complet *" className={FIELD} />
-                  <input name="email" type="email" required placeholder="Email *" className={FIELD} />
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[9px] font-mono tracking-widest text-ash-dim uppercase mb-1">
+                      Nom complet *
+                    </label>
+                    <input
+                      ref={firstFieldRef}
+                      name="name"
+                      required
+                      placeholder="Ex: Amad Diallo"
+                      className={FIELD}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] font-mono tracking-widest text-ash-dim uppercase mb-1">
+                      Email *
+                    </label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="nom@exemple.com"
+                      className={FIELD}
+                    />
+                  </div>
                 </div>
-                <input name="company" placeholder="Entreprise / Marque" className={FIELD} />
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[9px] font-mono tracking-widest text-ash-dim uppercase mb-1">
+                      Numéro WhatsApp / Téléphone *
+                    </label>
+                    <input
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="+221 77 000 00 00"
+                      className={FIELD}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[9px] font-mono tracking-widest text-ash-dim uppercase mb-1">
+                      Entreprise / Marque
+                    </label>
+                    <input
+                      name="company"
+                      placeholder="Nom de votre structure"
+                      className={FIELD}
+                    />
+                  </div>
+                </div>
 
                 <div>
-                  <p className="text-[10px] text-ash-dim uppercase tracking-widest mb-2">Besoin principal</p>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-[9px] font-mono tracking-widest text-ash-dim uppercase mb-1.5">
+                    Besoin principal
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
                     {SERVICES.map((s) => (
-                      <button key={s} type="button" onClick={() => setService(s)} className={cn("px-4 py-2 rounded-full border text-[11px] transition-all", service === s ? "border-accent bg-accent/20 text-white" : "border-line text-ash")}>
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setService(s)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-full border text-[11px] transition-all",
+                          service === s
+                            ? "border-accent bg-accent/20 text-white font-medium"
+                            : "border-line text-ash hover:border-line-strong"
+                        )}
+                      >
                         {s}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <textarea name="message" required rows={3} placeholder="Détails du projet... *" className={FIELD} />
+                <div>
+                  <label className="block text-[9px] font-mono tracking-widest text-ash-dim uppercase mb-1">
+                    Votre projet *
+                  </label>
+                  <textarea
+                    name="message"
+                    required
+                    rows={3}
+                    placeholder="Décrivez brièvement ce que vous souhaitez réaliser..."
+                    className={cn(FIELD, "resize-none")}
+                  />
+                </div>
 
-                <button type="submit" disabled={status === "loading"} className="w-full bg-accent py-4 rounded-full flex items-center justify-center gap-3 font-bold transition-all hover:bg-accent-soft">
-                  {status === "loading" ? <Loader2 className="animate-spin" /> : <>Envoyer la demande <ArrowRight className="h-4 w-4" /></>}
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="w-full bg-accent py-3.5 rounded-full flex items-center justify-center gap-2 font-medium text-white transition-all hover:bg-accent-soft active:scale-95 disabled:opacity-60"
+                >
+                  {status === "loading" ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : (
+                    <>
+                      <span>Envoyer la demande</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </button>
               </form>
             )}
