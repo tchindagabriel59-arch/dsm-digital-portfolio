@@ -307,6 +307,45 @@ export const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
+/* --- Section FAQ (Questions Fréquentes) -------------------------------- */
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+export const FAQ_ITEMS: FaqItem[] = [
+  {
+    question: "Combien de temps prend la création d'un site internet ?",
+    answer:
+      "En moyenne entre 7 et 14 jours ouvrés selon la complexité du projet (site vitrine, e-commerce ou plateforme sur-mesure). Nous vous fournissons un planning clair dès le premier jour.",
+  },
+  {
+    question: "Comment se déroule le paiement ?",
+    answer:
+      "Le paiement s'effectue en 2 fois : un acompte de 50% au lancement du projet pour démarrer les travaux, et le solde de 50% à la livraison finale après votre validation complète. Paiements acceptés : Virement bancaire, Wave, Orange Money ou MTN Mobile Money.",
+  },
+  {
+    question: "Serai-je propriétaire à 100% de mon site web ?",
+    answer:
+      "Oui, absolument. Vous êtes l'unique propriétaire de votre nom de domaine, de vos accès d'hébergement, du code et de tous vos contenus. Aucun abonnement caché ni dépendance.",
+  },
+  {
+    question: "Puis-je modifier mes textes et produits moi-même après ?",
+    answer:
+      "Oui ! Nous concevons votre site pour qu'il soit simple à utiliser. À la livraison, nous vous fournissons une courte vidéo de formation personnalisée pour ajouter ou modifier vos produits, prix et textes en toute autonomie.",
+  },
+  {
+    question: "Le site est-il rapide et optimisé pour la connexion mobile localement ?",
+    answer:
+      "Oui, tous nos sites sont développés avec Next.js (la technologie utilisée par Nike et TikTok), garantissant un chargement instantané même avec une connexion 3G/4G standard au Sénégal, Cameroun ou en Côte d'Ivoire.",
+  },
+  {
+    question: "Que se passe-t-il si j'ai un problème après la mise en ligne ?",
+    answer:
+      "Nous offrons un support et une garantie d'assistance technique gratuite pendant 30 jours après la livraison pour répondre à toutes vos questions et garantir le bon fonctionnement de votre écosystème.",
+  },
+];
+
 /* --- Textes Hero --------------------------------------------------------- */
 export const HERO = {
   badge: "⚡ Disponible pour de nouveaux projets",
