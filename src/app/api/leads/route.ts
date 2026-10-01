@@ -5,11 +5,12 @@ import { leads } from "@/db/schema";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, company, service, budget, message, source } = body;
+    const { name, email, phone, company, service, budget, message, source } = body;
 
     console.log("🔥 NOUVEAU PROSPECT REÇU SUR DSM DIGITAL 🔥", {
       nom: name,
       email: email,
+      whatsapp: phone || "Non renseigné",
       entreprise: company || "Non renseignée",
       service: service || "Non spécifié",
       message: message,
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
                 user_data: {
                   em: [email.trim().toLowerCase()],
                   fn: [name.trim().toLowerCase()],
+                  ph: phone ? [phone.replace(/\D/g, "")] : undefined,
                 },
               },
             ],
