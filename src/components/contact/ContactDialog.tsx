@@ -18,7 +18,7 @@ const SERVICES = [
 const BRANDING_OPTIONS = ["Oui, j'ai déjà un logo", "Non, on part de zéro"];
 const TIMELINE_OPTIONS = ["Le plus vite possible", "Dans 1 mois", "Pas d'urgence"];
 
-// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI
+// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI (Cherche-la dans Form Setup sur Web3Forms)
 const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062";
 
 const FIELD =
@@ -40,14 +40,12 @@ export default function ContactDialog({ open, onClose }: Props) {
 
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
-  // Focus automatique à l'ouverture
   useEffect(() => {
     if (open && step === 1) {
       setTimeout(() => firstFieldRef.current?.focus(), 300);
     }
   }, [open, step]);
 
-  // Réinitialiser à la fermeture
   useEffect(() => {
     if (!open) {
       setTimeout(() => {
@@ -61,45 +59,46 @@ export default function ContactDialog({ open, onClose }: Props) {
   const nextStep = () => setStep((s) => s + 1);
   const prevStep = () => setStep((s) => s - 1);
 
-  const isStep1Valid = formData.name.length > 2 && formData.email.includes("@") && formData.phone.length > 5;
-  const isStep3Valid = formData.details.length > 10;
+  const isStep1Valid = formData.name.trim().length >= 2 && formData.email.includes("@") && formData.phone.trim().length >= 6;
+  const isStep3Valid = formData.details.trim().length >= 5;
 
-  async function handleSubmit() {
+  async function handleFinalSubmit(selectedTimeline: string) {
     setStatus("loading");
+    const finalData = { ...formData, timeline: selectedTimeline };
 
     const params = new URLSearchParams(window.location.search);
     const source = params.get("utm_source") ?? (document.referrer ? new URL(document.referrer).hostname : "direct");
 
     try {
-      // 1. Sauvegarde BDD + Meta CAPI
+      // 1. Sauvegarde BDD + Meta CAPI (Server)
       fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, source }),
-      }).catch((err) => console.log("API Server:", err));
+        body: JSON.stringify({ ...finalData, source }),
+      }).catch((err) => console.log("API Server error:", err));
 
-      // 2. Envoi Email via Web3Forms
+      // 2. Envoi Email Direct via Web3Forms (Client-Side)
       if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
         await fetch("https://api.web3forms.com/submit", {
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({
             access_key: WEB3FORMS_KEY,
-            subject: `🔥 Nouveau prospect DSM Digital : ${formData.name}`,
+            subject: `🔥 Nouveau prospect DSM Digital : ${finalData.name}`,
             from_name: "DSM Digital Portfolio",
-            name: formData.name,
-            email: formData.email,
-            message: `Nom complet : ${formData.name}\nEmail : ${formData.email}\nWhatsApp : ${formData.phone}\n\nService demandé : ${formData.service}\n\nDétails de l'entreprise : \n${formData.details}\n\nLogo existant : ${formData.branding}\nDélai souhaité : ${formData.timeline}`,
+            name: finalData.name,
+            email: finalData.email,
+            message: `Nom complet : ${finalData.name}\nEmail : ${finalData.email}\nWhatsApp : ${finalData.phone}\n\nService demandé : ${finalData.service}\n\nDétails de l'entreprise : \n${finalData.details}\n\nLogo existant : ${finalData.branding}\nDélai souhaité : ${selectedTimeline}`,
           }),
         });
       }
       setStatus("done");
-    } catch {
+    } catch (e) {
+      console.error("Erreur submission:", e);
       setStatus("done");
     }
   }
 
-  // Obtenir le prénom pour personnaliser le message
   const firstName = formData.name.split(" ")[0] || "là";
 
   return (
@@ -113,7 +112,6 @@ export default function ContactDialog({ open, onClose }: Props) {
             animate={{ y: 0, opacity: 1 }}
             className="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl border border-line bg-[#111111] shadow-2xl"
           >
-            {/* Barre de progression */}
             {status !== "done" && (
               <div className="absolute top-0 left-0 h-1 bg-line w-full">
                 <motion.div className="h-full bg-accent" initial={{ width: "20%" }} animate={{ width: `${(step / 5) * 100}%` }} transition={{ ease: "easeInOut" }} />
@@ -149,9 +147,9 @@ export default function ContactDialog({ open, onClose }: Props) {
                         <p className="text-sm text-ash mt-2">Commençons par les présentations.</p>
                       </div>
                       <div className="space-y-4">
-                        <input ref={firstFieldRef} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Votre nom complet" className={FIELD} />
-                        <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Votre email" className={FIELD} />
-                        <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="Numéro WhatsApp" className={FIELD} />
+                        <input ref={firstFieldRef} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Votre nom complet *" className={FIELD} />
+                        <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Votre email *" className={FIELD} />
+                        <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="Numéro WhatsApp *" className={FIELD} />
                       </div>
                       <button onClick={nextStep} disabled={!isStep1Valid} className="w-full bg-accent py-4 rounded-xl flex items-center justify-center gap-2 font-medium text-white hover:bg-accent-soft disabled:opacity-50 transition-all">
                         Continuer <ArrowRight className="h-4 w-4" />
@@ -183,10 +181,10 @@ export default function ContactDialog({ open, onClose }: Props) {
                     <motion.div key="step3" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
                       <div>
                         <p className="font-mono text-[10px] tracking-widest text-accent uppercase">Étape 3/5</p>
-                        <h3 className="mt-2 text-2xl font-bold text-bone">Excellent choix.</h3>
-                        <p className="text-sm text-ash mt-2">Pour bien comprendre, que fait votre entreprise exactement ?</p>
+                        <h3 className="mt-2 text-2xl font-bold text-bone">Aider votre activité à grandir.</h3>
+                        <p className="text-sm text-ash mt-2">Pour bien vous accompagner, que fait votre entreprise exactement ?</p>
                       </div>
-                      <textarea value={formData.details} onChange={(e) => setFormData({ ...formData, details: e.target.value })} rows={4} placeholder="Ex: Je vends des chaussures de sport et je veux une boutique en ligne..." className={cn(FIELD, "resize-none")} />
+                      <textarea value={formData.details} onChange={(e) => setFormData({ ...formData, details: e.target.value })} rows={4} placeholder="Ex: J'ai un salon de coiffure et je souhaite que les clientes puissent réserver en ligne..." className={cn(FIELD, "resize-none")} />
                       <div className="flex justify-between items-center mt-4">
                         <button onClick={prevStep} className="text-sm text-ash hover:text-white flex items-center gap-2"><ArrowLeft className="h-4 w-4" /> Retour</button>
                         <button onClick={nextStep} disabled={!isStep3Valid} className="bg-accent px-6 py-3 rounded-xl flex items-center gap-2 font-medium text-white disabled:opacity-50">Continuer <ArrowRight className="h-4 w-4" /></button>
@@ -199,8 +197,8 @@ export default function ContactDialog({ open, onClose }: Props) {
                     <motion.div key="step4" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
                       <div>
                         <p className="font-mono text-[10px] tracking-widest text-accent uppercase">Étape 4/5</p>
-                        <h3 className="mt-2 text-2xl font-bold text-bone">C'est noté !</h3>
-                        <p className="text-sm text-ash mt-2">Concernant votre image, avez-vous déjà un logo et des couleurs ?</p>
+                        <h3 className="mt-2 text-2xl font-bold text-bone">C'est très clair !</h3>
+                        <p className="text-sm text-ash mt-2">Concernant votre visuel, avez-vous déjà un logo et des couleurs définies ?</p>
                       </div>
                       <div className="flex flex-col gap-3">
                         {BRANDING_OPTIONS.map((b) => (
@@ -213,18 +211,18 @@ export default function ContactDialog({ open, onClose }: Props) {
                     </motion.div>
                   )}
 
-                  {/* ÉTAPE 5 : Urgence & Envoi */}
+                  {/* ÉTAPE 5 : Urgence & Envoi direct */}
                   {step === 5 && (
                     <motion.div key="step5" initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
                       <div>
                         <p className="font-mono text-[10px] tracking-widest text-accent uppercase">Étape 5/5</p>
-                        <h3 className="mt-2 text-2xl font-bold text-bone">Dernière question, {firstName}.</h3>
-                        <p className="text-sm text-ash mt-2">Pour nous organiser, quand aimeriez-vous que ce soit prêt ?</p>
+                        <h3 className="mt-2 text-2xl font-bold text-bone">Dernière étape, {firstName}.</h3>
+                        <p className="text-sm text-ash mt-2">Pour nous organiser, quand souhaiteriez-vous démarrer ce projet ?</p>
                       </div>
                       <div className="flex flex-col gap-3">
                         {TIMELINE_OPTIONS.map((t) => (
-                          <button key={t} onClick={() => { setFormData({ ...formData, timeline: t }); handleSubmit(); }} disabled={status === "loading"} className="w-full text-left px-5 py-4 rounded-xl border border-line bg-void/50 text-ash hover:border-accent hover:text-white transition-all relative">
-                            {status === "loading" && formData.timeline === t ? <Loader2 className="animate-spin h-5 w-5 absolute right-5 top-1/2 -translate-y-1/2 text-accent" /> : t}
+                          <button key={t} onClick={() => handleFinalSubmit(t)} disabled={status === "loading"} className="w-full text-left px-5 py-4 rounded-xl border border-line bg-void/50 text-ash hover:border-accent hover:text-white transition-all relative font-medium">
+                            {status === "loading" ? <Loader2 className="animate-spin h-5 w-5 absolute right-5 top-1/2 -translate-y-1/2 text-accent" /> : t}
                           </button>
                         ))}
                       </div>
