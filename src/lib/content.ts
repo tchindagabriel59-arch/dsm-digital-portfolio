@@ -30,6 +30,7 @@ export const NAV_LINKS = [
 /* --- Bandeau défilant du hero ------------------------------------------- */
 export const MARQUEE_ITEMS = [
   "Création de sites web",
+  "Portfolios Pro",
   "Référencement Google",
   "Publicité Meta Ads",
   "TikTok Ads",
@@ -105,13 +106,13 @@ export const SERVICES: Service[] = [
     index: "01",
     title: "Création de sites internet",
     description:
-      "Nous concevons des sites professionnels sur-mesure : sites vitrines, boutiques en ligne, réservation, catalogues et plateformes métier. Design moderne + rapidité sur mobile.",
+      "Nous concevons des sites professionnels sur-mesure : sites vitrines, e-commerce, portfolios, catalogues et plateformes métier. Design moderne + rapidité sur mobile.",
     icon: Code2,
     items: [
       "Sites vitrines pour entreprises & PME",
+      "Portfolios professionnels & freelances",
       "Boutiques e-commerce & catalogues",
       "Systèmes de réservation & commande",
-      "Applications & plateformes sur-mesure",
     ],
   },
   {
@@ -317,7 +318,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Combien de temps prend la création d'un site internet ?",
     answer:
-      "En moyenne entre 7 et 14 jours ouvrés selon la complexité du projet (site vitrine, e-commerce ou plateforme sur-mesure). Nous vous fournissons un planning clair dès le premier jour.",
+      "En moyenne entre 7 et 14 jours ouvrés selon la complexité du projet (site vitrine, portfolio, e-commerce ou plateforme sur-mesure). Nous vous fournissons un planning clair dès le premier jour.",
   },
   {
     question: "Comment se déroule le paiement ?",
@@ -385,7 +386,7 @@ export const FOOTER_COLUMNS = [
     title: "Services",
     links: [
       { label: "Création de sites internet", href: "#services" },
-      { label: "Référencement Google (SEO)", href: "#services" },
+      { label: "Création de Portfolios", href: "#services" },
       { label: "Publicité sponsorisée (Ads)", href: "#services" },
       { label: "Gestion Réseaux Sociaux", href: "#services" },
     ],
