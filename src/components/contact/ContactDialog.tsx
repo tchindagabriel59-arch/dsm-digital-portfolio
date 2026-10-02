@@ -17,6 +17,9 @@ const SERVICES = [
 const BRANDING_OPTIONS = ["Oui, j'ai déjà un logo", "Non, on part de zéro"];
 const TIMELINE_OPTIONS = ["Le plus vite possible", "Dans 1 mois", "Pas d'urgence"];
 
+// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI (ex: a1b2c3d4-xxxx-xxxx)
+const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062";
+
 const FIELD =
   "w-full rounded-xl border border-line bg-void/80 px-4 py-3.5 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
 
@@ -66,11 +69,32 @@ export default function ContactDialog({ open, onClose }: Props) {
     const source = params.get("utm_source") ?? (document.referrer ? new URL(document.referrer).hostname : "direct");
 
     try {
-      await fetch("/api/leads", {
+      // 1. Sauvegarde BDD PostgreSQL + Meta CAPI côté serveur Vercel
+      fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...finalData, source }),
-      });
+      }).catch((err) => console.log("API Server:", err));
+
+      // 2. Envoi Direct de l'email depuis le navigateur client via Web3Forms (Jamais bloqué par Cloudflare !)
+      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: `🔥 Nouveau prospect DSM Digital : ${finalData.name}`,
+            from_name: "DSM Digital Portfolio",
+            name: finalData.name,
+            email: finalData.email,
+            message: `• Nom complet : ${finalData.name}\n• Email : ${finalData.email}\n• WhatsApp / Tél : ${finalData.phone}\n• Service demandé : ${finalData.service}\n\n• Détails du projet :\n${finalData.details}\n\n• Logo existant : ${finalData.branding}\n• Délai souhaité : ${selectedTimeline}`,
+          }),
+        });
+      }
+
       setStatus("done");
     } catch {
       setStatus("done");
