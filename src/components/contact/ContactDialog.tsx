@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 type Props = { open: boolean; onClose: () => void };
 
 const SERVICES = [
-  "Création de site internet",
+  "Création site internet / Portfolio",
   "Référencement Google",
   "Publicité sponsorisée",
   "Gestion Réseaux Sociaux",
