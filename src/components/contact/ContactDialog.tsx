@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Check, Loader2, X } from "lucide-react";
-import { SITE } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 type Props = { open: boolean; onClose: () => void };
@@ -18,16 +17,13 @@ const SERVICES = [
 const BRANDING_OPTIONS = ["Oui, j'ai déjà un logo", "Non, on part de zéro"];
 const TIMELINE_OPTIONS = ["Le plus vite possible", "Dans 1 mois", "Pas d'urgence"];
 
-// 🔑 COLLE TA CLÉ PUBLIQUE WEB3FORMS ICI (Cherche-la dans Form Setup sur Web3Forms)
-const WEB3FORMS_KEY = "5f9ecc46-a532-4735-af2d-a4cbbe0e2062";
-
 const FIELD =
   "w-full rounded-xl border border-line bg-void/80 px-4 py-3.5 text-sm text-bone placeholder:text-ash-dim transition-colors focus:border-accent focus:outline-none";
 
 export default function ContactDialog({ open, onClose }: Props) {
   const [step, setStep] = useState(1);
   const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -59,8 +55,8 @@ export default function ContactDialog({ open, onClose }: Props) {
   const nextStep = () => setStep((s) => s + 1);
   const prevStep = () => setStep((s) => s - 1);
 
-  const isStep1Valid = formData.name.trim().length >= 2 && formData.email.includes("@") && formData.phone.trim().length >= 6;
-  const isStep3Valid = formData.details.trim().length >= 5;
+  const isStep1Valid = formData.name.trim().length >= 2 && formData.email.includes("@") && formData.phone.trim().length >= 5;
+  const isStep3Valid = formData.details.trim().length >= 3;
 
   async function handleFinalSubmit(selectedTimeline: string) {
     setStatus("loading");
@@ -70,31 +66,13 @@ export default function ContactDialog({ open, onClose }: Props) {
     const source = params.get("utm_source") ?? (document.referrer ? new URL(document.referrer).hostname : "direct");
 
     try {
-      // 1. Sauvegarde BDD + Meta CAPI (Server)
-      fetch("/api/leads", {
+      await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...finalData, source }),
-      }).catch((err) => console.log("API Server error:", err));
-
-      // 2. Envoi Email Direct via Web3Forms (Client-Side)
-      if (WEB3FORMS_KEY && WEB3FORMS_KEY !== "5f9ecc46-a532-4735-af2d-a4cbbe0e2062") {
-        await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_KEY,
-            subject: `🔥 Nouveau prospect DSM Digital : ${finalData.name}`,
-            from_name: "DSM Digital Portfolio",
-            name: finalData.name,
-            email: finalData.email,
-            message: `Nom complet : ${finalData.name}\nEmail : ${finalData.email}\nWhatsApp : ${finalData.phone}\n\nService demandé : ${finalData.service}\n\nDétails de l'entreprise : \n${finalData.details}\n\nLogo existant : ${finalData.branding}\nDélai souhaité : ${selectedTimeline}`,
-          }),
-        });
-      }
+      });
       setStatus("done");
-    } catch (e) {
-      console.error("Erreur submission:", e);
+    } catch {
       setStatus("done");
     }
   }
