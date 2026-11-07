@@ -1,65 +1,16 @@
-import type { Metadata, Viewport } from "next";
+"use client";
+
 import type { ReactNode } from "react";
 import Script from "next/script";
 import { clashDisplay, satoshi } from "@/lib/fonts";
-import { SITE } from "@/lib/content";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import LoadingProvider from "@/components/providers/LoadingProvider";
 import ContactProvider from "@/components/providers/ContactProvider";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { trackMetaEvent } from "@/lib/meta";
 import "./globals.css";
-
-const TITLE = "DSM Digital — Agence de Création Web, SEO & Publicité";
-const DESCRIPTION = "Création de sites internet professionnels, référencement Google et publicités sponsorisées (Meta, TikTok, Google). Développez votre activité avec des résultats sous 30 jours.";
-
-export const metadata: Metadata = {
-  metadataBase: new URL("https://dsm-digital-portfolio.vercel.app"),
-  title: TITLE,
-  description: DESCRIPTION,
-  applicationName: "DSM Digital",
-  authors: [{ name: "DSM Digital" }],
-  keywords: [
-    "création site internet",
-    "agence web Dakar",
-    "publicité Facebook",
-    "TikTok Ads",
-    "Google Ads",
-    "référencement SEO",
-  ],
-  openGraph: {
-    type: "website",
-    locale: "fr_FR",
-    url: "https://dsm-digital-portfolio.vercel.app",
-    siteName: "DSM Digital",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: [
-      {
-        url: "/images/sectors/corporate.webp",
-        width: 1200,
-        height: 630,
-        alt: "DSM Digital — Agence Digitale & Création Web",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/images/sectors/corporate.webp"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#0A0A0A",
-  colorScheme: "dark",
-};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const WHATSAPP_NUMBER = "221787533629";
@@ -68,9 +19,23 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   );
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
 
+  const handleWhatsAppClick = () => {
+    trackMetaEvent("Contact", {}, {
+      method: "WhatsApp",
+      content_name: "Bouton WhatsApp Flottant",
+    });
+  };
+
   return (
     <html lang="fr" className={`${clashDisplay.variable} ${satoshi.variable}`}>
       <head>
+        <title>DSM Digital — Agence de Création Web, SEO & Publicité</title>
+        <meta
+          name="description"
+          content="Création de sites internet professionnels, référencement Google et publicités sponsorisées (Meta, TikTok, Google). Développez votre activité avec des résultats sous 30 jours."
+        />
+        <meta name="theme-color" content="#0A0A0A" />
+
         {/* PIXEL META — DSM DIGITAL (ID: 1094246516766017) */}
         <Script
           id="meta-pixel"
@@ -105,7 +70,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Aller au contenu
         </a>
 
-        {/* Couche d'expérience */}
         <SmoothScroll />
         <ScrollProgress />
 
@@ -122,6 +86,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={handleWhatsAppClick}
           aria-label="Discuter sur WhatsApp"
           className="group fixed bottom-6 right-6 z-[200] flex items-center gap-3"
         >
