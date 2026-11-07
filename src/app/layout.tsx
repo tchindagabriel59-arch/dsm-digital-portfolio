@@ -71,7 +71,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" className={`${clashDisplay.variable} ${satoshi.variable}`}>
       <head>
-        {/* PIXEL META — DSM DIGITAL */}
+        {/* PIXEL META — DSM DIGITAL (ID: 1094246516766017) */}
         <Script
           id="meta-pixel"
           strategy="afterInteractive"
@@ -85,11 +85,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '2974733949534772');
+              fbq('init', '1094246516766017');
               fbq('track', 'PageView');
             `,
           }}
         />
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1094246516766017&ev=PageView&noscript=1"
+            alt="Meta Pixel"
+          />
+        </noscript>
       </head>
       <body className="grain bg-void text-bone antialiased">
         <a href="#contenu" className="skip-link">
