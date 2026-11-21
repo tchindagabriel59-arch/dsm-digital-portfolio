@@ -1,190 +1,208 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Zap, Sparkles, MessageSquare, ArrowUpRight } from "lucide-react";
-import { useContact } from "@/components/providers/ContactProvider";
+import { Check, Sparkles, ArrowUpRight, MessageSquare, Globe, Megaphone, Share2, Search, Zap } from "lucide-react";
+import { trackMetaEvent } from "@/lib/meta";
+
+const WHATSAPP_NUMBER = "221787533629";
 
 const PLANS = [
   {
-    name: "Site Vitrine & Landing Page Pro",
-    badge: "Populaire PME",
-    price: "150 000",
-    priceMax: "350 000 FCFA",
-    period: "paiement unique",
+    icon: Globe,
+    name: "Création de Sites Internet",
+    badge: "Le Plus Demandé",
+    price: "80 000",
+    priceMax: "à 350 000 FCFA",
+    period: "selon l'envergure de votre projet",
     description:
-      "Idéal pour les entreprises qui veulent une crédibilité immédiate et transformer leurs visiteurs en clients WhatsApp.",
+      "Une vitrine digitale prestigieuse et moderne, conçue sur-mesure pour inspirer une confiance immédiate et générer des ventes.",
     features: [
-      "Design moderne & 100% sur-mesure",
-      "Optimisé smartphone à haute vitesse",
-      "Intégration WhatsApp direct & formulaires",
-      "Référencement Google local (SEO)",
-      "Nom de domaine pro & hébergement sécurisé",
-      "Livraison rapide en 7 à 10 jours",
-    ],
-    highlight: false,
-    ctaText: "Lancer mon site vitrine",
-  },
-  {
-    name: "Plateforme Web & Sur-Mesure",
-    badge: "Haute Performance",
-    price: "450 000",
-    priceMax: "FCFA et +",
-    period: "sur devis selon cahier des charges",
-    description:
-      "Pour les projets ambitieux nécessitant une logique métier avancée, des bases de données et des automatisations.",
-    features: [
-      "Tout ce qui est inclus dans le Site Vitrine",
-      "Espace administrateur / Tableau de bord",
-      "Gestion de catalogue, membres ou réservations",
-      "Base de données haute disponibilité",
-      "Paiements en ligne (Orange Money, Wave, Carte)",
-      "Support & maintenance prioritaire 3 mois",
+      "Design moderne, élégant et 100% sur-mesure",
+      "Affichage ultra-rapide sur smartphone et ordinateur",
+      "Boutons d'appel & redirection WhatsApp directe",
+      "Formulaire interactif de capture de prospects",
+      "Nom de domaine professionnel & hébergement sécurisé",
+      "Livraison clé en main sous 5 à 10 jours",
     ],
     highlight: true,
-    ctaText: "Discuter de mon architecture",
+    whatsappMsg: "Bonjour Gabriel, je souhaite obtenir un devis pour la création de mon site internet.",
   },
   {
-    name: "Campagnes Publicitaires",
-    badge: "Croissance Rapide",
+    icon: Megaphone,
+    name: "Publicités Sponsorisées",
+    badge: "Acquisition Clients",
     price: "25 000",
     priceMax: "FCFA / mois",
-    period: "(+ budget pub de votre choix)",
+    period: "(+ budget publicitaire de votre choix)",
     description:
-      "Générez un flux continu de prospects qualifiés grâce aux publicités ciblées sur Meta, TikTok et Google.",
+      "Attirez quotidiennement de nouveaux clients qualifiés grâce à des campagnes ciblées sur Meta (Facebook/Instagram), TikTok et Google.",
     features: [
-      "Configuration Pixel & CAPI haute précision",
-      "Création des visuels publicitaires percutants",
-      "Rédaction de messages de vente (Copywriting)",
-      "Ciblage géographique & démographique ultra-précis",
-      "Optimisation continue pour baisser le coût par prospect",
-      "Rapport hebdomadaire des résultats",
+      "Installation Pixel & API de Conversions haute précision",
+      "Création de visuels et d'accroches de vente percutantes",
+      "Ciblage géographique et démographique précis",
+      "Optimisation continue pour réduire le coût par prospect",
+      "Suivi personnalisé et rapport de rentabilité régulier",
     ],
     highlight: false,
-    ctaText: "Booster mes ventes",
+    whatsappMsg: "Bonjour Gabriel, je souhaite lancer des campagnes publicitaires sponsorisées pour booster mes ventes.",
   },
   {
-    name: "Gestion Complète Réseaux",
+    icon: Share2,
+    name: "Gestion des Réseaux Sociaux",
     badge: "Image de Marque",
     price: "25 000",
     priceMax: "FCFA / mois",
-    period: "forfait mensuel",
+    period: "forfait d'accompagnement mensuel",
     description:
-      "Déléguez entièrement vos réseaux sociaux pour bâtir une communauté engagée et une autorité totale dans votre secteur.",
+      "Bâtissez une forte notoriété et valorisez le sérieux de votre entreprise auprès de votre communauté avec des publications régulières.",
     features: [
-      "Création de visuels graphiques professionnels",
-      "Vidéos courtes attractives (Reels / TikTok)",
-      "Calendrier de publication régulier",
-      "Animation et réponses aux messages / commentaires",
-      "Stratégie de croissance organique",
-      "Bilan de performance mensuel",
+      "Conception graphique de visuels professionnels",
+      "Rédaction de messages soignés et engageants",
+      "Mise en place d'un calendrier éditorial cohérent",
+      "Conseils personnalisés pour accroître votre audience",
+      "Valorisation continue de vos offres et services",
     ],
     highlight: false,
-    ctaText: "Déléguer mes réseaux",
+    whatsappMsg: "Bonjour Gabriel, je souhaite confier la gestion de mes réseaux sociaux à votre agence.",
+  },
+  {
+    icon: Search,
+    name: "Référencement Google & Présence Locale",
+    badge: "Visibilité Permanente",
+    price: "45 000",
+    priceMax: "FCFA",
+    period: "pack mise en place & positionnement",
+    description:
+      "Soyez le premier choix des clients de votre secteur géographique lorsqu'ils recherchent vos services sur Google et Google Maps.",
+    features: [
+      "Création et optimisation de votre fiche Google My Business (Maps)",
+      "Positionnement sur les mots-clés clés de votre activité",
+      "Indexation officielle sur les moteurs de recherche Google",
+      "Mise en avant des avis et de votre numéro direct",
+      "Visibilité permanente 24h/24 sans frais supplémentaires",
+    ],
+    highlight: false,
+    whatsappMsg: "Bonjour Gabriel, je souhaite optimiser le référencement Google et la présence locale de mon entreprise.",
   },
 ];
 
 export default function Pricing() {
-  const { openContact } = useContact();
+  const handlePlanClick = (planName: string, whatsappMsg: string) => {
+    // Tracking de l'intention d'achat pour Meta
+    trackMetaEvent("InitiateCheckout", {}, {
+      content_name: planName,
+      content_category: "Offre Tarifaire",
+    });
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMsg)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <section id="tarifs" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-void border-t border-line overflow-hidden">
-      {/* Halo lumineux de fond */}
+      {/* Halo lumineux décoratif */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto">
-        {/* En-tête */}
+        {/* En-tête de section */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/25 text-accent text-xs uppercase tracking-wider font-semibold mb-4">
             <Sparkles className="h-3.5 w-3.5" />
-            Tarifs clairs & transparents
+            Tarifs Transparents & Accessibles
           </div>
           <h2 className="text-3xl sm:text-5xl font-bold text-bone tracking-tight font-display">
-            Investissez dans des outils qui vous rapportent des clients.
+            Des investissements pensés pour générer des résultats concrets.
           </h2>
-          <p className="mt-5 text-ash text-base sm:text-lg">
-            Pas de mauvaise surprise ni de frais cachés. Nos forfaits sont pensés pour être rentabilisés dès vos premiers contrats.
+          <p className="mt-5 text-ash text-base sm:text-lg leading-relaxed">
+            Nous proposons des solutions digitales adaptées aux réalités et ambitions des entreprises, alliant excellence technique et rentabilité dès les premières semaines.
           </p>
         </div>
 
         {/* Grille des tarifs */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {PLANS.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`relative flex flex-col justify-between rounded-2xl p-7 transition-all duration-300 ${
-                plan.highlight
-                  ? "bg-[#141414] border-2 border-accent shadow-[0_0_40px_rgba(37,99,235,0.2)] lg:-translate-y-2"
-                  : "bg-[#0F0F0F] border border-line hover:border-line-strong hover:bg-[#121212]"
-              }`}
-            >
-              {plan.highlight && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1.5">
-                  <Zap className="h-3 w-3 fill-current" /> Recommandé
-                </div>
-              )}
-
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-medium text-ash uppercase tracking-wider">
-                    {plan.badge}
-                  </span>
-                </div>
-
-                <h3 className="mt-3 text-lg font-bold text-bone">{plan.name}</h3>
-                <p className="mt-2 text-xs text-ash leading-relaxed min-h-[48px]">
-                  {plan.description}
-                </p>
-
-                {/* Bloc Prix */}
-                <div className="mt-6 pt-6 border-t border-line">
-                  <div className="text-xs text-ash-dim uppercase tracking-wider">À partir de</div>
-                  <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-3xl sm:text-4xl font-extrabold text-bone tracking-tight">
-                      {plan.price}
-                    </span>
-                    <span className="text-sm font-semibold text-accent">
-                      {plan.priceMax}
-                    </span>
+          {PLANS.map((plan, i) => {
+            const Icon = plan.icon;
+            return (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className={`relative flex flex-col justify-between rounded-2xl p-7 transition-all duration-300 ${
+                  plan.highlight
+                    ? "bg-[#141414] border-2 border-accent shadow-[0_0_40px_rgba(37,99,235,0.2)] lg:-translate-y-2"
+                    : "bg-[#0F0F0F] border border-line hover:border-line-strong hover:bg-[#121212]"
+                }`}
+              >
+                {plan.highlight && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+                    <Zap className="h-3 w-3 fill-current" /> Formule Populaire
                   </div>
-                  <div className="mt-1 text-xs text-ash">{plan.period}</div>
+                )}
+
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-medium text-ash uppercase tracking-wider">
+                      {plan.badge}
+                    </span>
+                    <div className="p-2 rounded-lg bg-void border border-line text-accent">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                  </div>
+
+                  <h3 className="mt-3 text-lg font-bold text-bone">{plan.name}</h3>
+                  <p className="mt-2 text-xs text-ash leading-relaxed min-h-[48px]">
+                    {plan.description}
+                  </p>
+
+                  {/* Bloc Prix */}
+                  <div className="mt-6 pt-6 border-t border-line">
+                    <div className="text-[11px] text-ash-dim uppercase tracking-wider">À partir de</div>
+                    <div className="mt-1 flex items-baseline gap-1.5 flex-wrap">
+                      <span className="text-3xl sm:text-4xl font-extrabold text-bone tracking-tight">
+                        {plan.price}
+                      </span>
+                      <span className="text-sm font-semibold text-accent">
+                        {plan.priceMax}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-[11px] text-ash">{plan.period}</div>
+                  </div>
+
+                  {/* Inclusions */}
+                  <ul className="mt-8 space-y-3.5">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2.5 text-xs text-ash leading-snug">
+                        <div className="flex-shrink-0 mt-0.5 rounded-full p-0.5 bg-accent/15 text-accent">
+                          <Check className="h-3.5 w-3.5" />
+                        </div>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                {/* Liste des fonctionnalités */}
-                <ul className="mt-8 space-y-3.5">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2.5 text-xs text-ash leading-snug">
-                      <div className="flex-shrink-0 mt-0.5 rounded-full p-0.5 bg-accent/15 text-accent">
-                        <Check className="h-3.5 w-3.5" />
-                      </div>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Bouton d'action */}
-              <div className="mt-8 pt-6 border-t border-line">
-                <button
-                  onClick={openContact}
-                  className={`w-full py-3 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
-                    plan.highlight
-                      ? "bg-accent hover:bg-accent-light text-white shadow-lg shadow-accent/25 hover:shadow-accent/40"
-                      : "bg-void border border-line text-bone hover:border-accent hover:text-white"
-                  }`}
-                >
-                  <span>{plan.ctaText}</span>
-                  <ArrowUpRight className="h-4 w-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                {/* Bouton de souscription WhatsApp */}
+                <div className="mt-8 pt-6 border-t border-line">
+                  <button
+                    onClick={() => handlePlanClick(plan.name, plan.whatsappMsg)}
+                    className={`w-full py-3 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
+                      plan.highlight
+                        ? "bg-accent hover:bg-accent-light text-white shadow-lg shadow-accent/25 hover:shadow-accent/40"
+                        : "bg-void border border-line text-bone hover:border-accent hover:text-white"
+                    }`}
+                  >
+                    <span>Commander cette offre</span>
+                    <ArrowUpRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Encadré spécial : Modalité Partenariat / Apport d'affaires */}
+        {/* Encadré Programme Partenariat & Apport d'Affaires */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -193,21 +211,23 @@ export default function Pricing() {
         >
           <div className="space-y-2 text-center md:text-left">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-accent uppercase tracking-wider">
-              <MessageSquare className="h-4 w-4" /> Programme Apport d'Affaires & Partenariat
+              <MessageSquare className="h-4 w-4" /> Programme Partenaire & Apport d&apos;Affaires
             </div>
             <h4 className="text-xl font-bold text-bone">
-              Vous avez des confrères ou partenaires qui ont besoin d'un site ?
+              Vous connaissez des entrepreneurs ayant besoin d&apos;un site ou de visibilité ?
             </h4>
             <p className="text-sm text-ash max-w-2xl">
-              Recommandez DSM Digital à votre entourage. Pour chaque contrat conclu grâce à vous, nous vous reversons une **commission directe de 10% à 15%**.
+              Recommandez DSM Digital à votre réseau professionnel. Pour chaque projet concrétisé grâce à votre mise en relation, nous vous versons une commission directe de <strong>10% à 15%</strong> sur le montant total du contrat.
             </p>
           </div>
-          <button
-            onClick={openContact}
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour Gabriel, je souhaite rejoindre votre programme de partenariat / apport d'affaires.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-shrink-0 px-6 py-3.5 rounded-full border border-line-strong hover:border-accent text-bone text-xs font-semibold hover:text-white transition-colors"
           >
             Devenir Partenaire Apporteur
-          </button>
+          </a>
         </motion.div>
       </div>
     </section>
